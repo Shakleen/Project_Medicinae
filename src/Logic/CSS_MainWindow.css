@@ -1,0 +1,15 @@
+#pane{
+    -fx-background-image: url("/Images/Main_Window_Background.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 1024 615;
+    -fx-background-position: center center;
+}
+.button {
+    -fx-background-color: linear-gradient(#0000c4 0%, #0000aa 25%, #00009c 75%, #00007f 100%);
+    -fx-border-color: white;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial";
+}
+.button:hover {
+    -fx-background-color: linear-gradient(#00f0ff 0%, #00d0e6 25%, #09bdcd 75%, #06a2b4 100%);
+}
