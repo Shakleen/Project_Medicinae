@@ -39,7 +39,6 @@ public class C_MainWindow {
         FX_ImageView_ViewInfo.setFitWidth(Width);
         FX_ImageView_ViewInfo.setPreserveRatio(PreserveRatio);
 
-
         FX_ImageView_Help.setImage(new Image("/Images/Help.png"));
         FX_ImageView_Help.setFitHeight(Height);
         FX_ImageView_Help.setFitWidth(Width);

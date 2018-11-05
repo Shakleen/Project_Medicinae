@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="@localhost">
+  <database-model serializer="dbm" rdbms="ORACLE" format-version="4.11">
+    <root id="1">
+      <ServerVersion>11.2.0.2</ServerVersion>
+    </root>
+    <schema id="2" parent="1" name="ISHRAK">
+      <ObjectId>48</ObjectId>
+      <IntrospectionTimestamp>2018-11-05.18:06:06</IntrospectionTimestamp>
+      <CreatedTimestamp>2018-11-05.18:06:05</CreatedTimestamp>
+      <ModifiedTimestamp>2018-11-05.18:06:05</ModifiedTimestamp>
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="PUBLIC">
+      <ObjectId>1</ObjectId>
+    </schema>
+    <schema id="4" parent="1" name="SYS">
+      <ObjectId>0</ObjectId>
+    </schema>
+    <schema id="5" parent="1" name="SYSTEM">
+      <ObjectId>5</ObjectId>
+    </schema>
+    <schema id="6" parent="1" name="OUTLN">
+      <ObjectId>9</ObjectId>
+    </schema>
+    <schema id="7" parent="1" name="DIP">
+      <ObjectId>14</ObjectId>
+    </schema>
+    <schema id="8" parent="1" name="ORACLE_OCM">
+      <ObjectId>21</ObjectId>
+    </schema>
+    <schema id="9" parent="1" name="DBSNMP">
+      <ObjectId>29</ObjectId>
+    </schema>
+    <schema id="10" parent="1" name="APPQOSSYS">
+      <ObjectId>30</ObjectId>
+    </schema>
+    <schema id="11" parent="1" name="CTXSYS">
+      <ObjectId>32</ObjectId>
+    </schema>
+    <schema id="12" parent="1" name="XDB">
+      <ObjectId>34</ObjectId>
+    </schema>
+    <schema id="13" parent="1" name="ANONYMOUS">
+      <ObjectId>35</ObjectId>
+    </schema>
+    <schema id="14" parent="1" name="MDSYS">
+      <ObjectId>42</ObjectId>
+    </schema>
+    <schema id="15" parent="1" name="HR">
+      <ObjectId>43</ObjectId>
+    </schema>
+    <schema id="16" parent="1" name="FLOWS_FILES">
+      <ObjectId>44</ObjectId>
+    </schema>
+    <schema id="17" parent="1" name="APEX_PUBLIC_USER">
+      <ObjectId>45</ObjectId>
+    </schema>
+    <schema id="18" parent="1" name="APEX_040000">
+      <ObjectId>47</ObjectId>
+    </schema>
+    <schema id="19" parent="1" name="XS$NULL">
+      <ObjectId>2147483638</ObjectId>
+    </schema>
+    <sequence id="20" parent="2" name="SEQ_PATIENT_ID">
+      <ObjectId>20152</ObjectId>
+      <CreatedTimestamp>2018-11-05.18:06:05</CreatedTimestamp>
+      <ModifiedTimestamp>2018-11-05.18:06:05</ModifiedTimestamp>
+      <SequenceIdentity>1</SequenceIdentity>
+      <CacheSize>10</CacheSize>
+    </sequence>
+    <table id="21" parent="2" name="BASIC_INFO">
+      <ObjectId>20150</ObjectId>
+      <CreatedTimestamp>2018-11-05.18:06:05</CreatedTimestamp>
+      <ModifiedTimestamp>2018-11-05.18:06:05</ModifiedTimestamp>
+      <TemporaryPreserve>1</TemporaryPreserve>
+    </table>
+    <table id="22" parent="2" name="PATIENT_PHONE_NUMBERS">
+      <ObjectId>20153</ObjectId>
+      <CreatedTimestamp>2018-11-05.18:06:05</CreatedTimestamp>
+      <ModifiedTimestamp>2018-11-05.18:06:05</ModifiedTimestamp>
+      <TemporaryPreserve>1</TemporaryPreserve>
+    </table>
+    <column id="23" parent="21" name="PATIENT_ID">
+      <Position>1</Position>
+      <DataType>NUMBER(*)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="24" parent="21" name="PATIENT_NAME">
+      <Position>2</Position>
+      <DataType>VARCHAR2(100 byte)|0s</DataType>
+    </column>
+    <column id="25" parent="21" name="AGE">
+      <Position>3</Position>
+      <DataType>NUMBER(*)|0s</DataType>
+    </column>
+    <column id="26" parent="21" name="SEX">
+      <Position>4</Position>
+      <DataType>VARCHAR2(25 byte)|0s</DataType>
+    </column>
+    <column id="27" parent="21" name="ADDRESS">
+      <Position>5</Position>
+      <DataType>VARCHAR2(200 byte)|0s</DataType>
+    </column>
+    <column id="28" parent="21" name="ADMISSION_DATE">
+      <Position>6</Position>
+      <DataType>DATE|0s</DataType>
+    </column>
+    <index id="29" parent="21" name="PK_PATIENT_ID">
+      <ObjectId>20151</ObjectId>
+      <CreatedTimestamp>2018-11-05.18:06:05</CreatedTimestamp>
+      <ModifiedTimestamp>2018-11-05.18:06:05</ModifiedTimestamp>
+      <TablespaceName>SYSTEM</TablespaceName>
+      <ColNames>PATIENT_ID</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="30" parent="21" name="PK_PATIENT_ID">
+      <ModifiedTimestamp>2018-11-05.18:06:05</ModifiedTimestamp>
+      <ColNames>PATIENT_ID</ColNames>
+      <InitiallyDeferred>1</InitiallyDeferred>
+      <UnderlyingIndexName>PK_PATIENT_ID</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <check id="31" parent="21" name="CHK_AGE">
+      <ModifiedTimestamp>2018-11-05.18:06:05</ModifiedTimestamp>
+      <ColNames>AGE</ColNames>
+      <Predicate>AGE &gt;= 0</Predicate>
+    </check>
+    <check id="32" parent="21" name="CHK_SEX">
+      <ModifiedTimestamp>2018-11-05.18:06:05</ModifiedTimestamp>
+      <ColNames>SEX</ColNames>
+      <Predicate>SEX IN (&apos;MALE&apos;, &apos;FEMALE&apos;)</Predicate>
+    </check>
+    <column id="33" parent="22" name="PATIENT_ID">
+      <Position>1</Position>
+      <DataType>NUMBER(*)|0s</DataType>
+    </column>
+    <column id="34" parent="22" name="PHONE_NUMBER">
+      <Position>2</Position>
+      <DataType>VARCHAR2(20 byte)|0s</DataType>
+    </column>
+    <foreign-key id="35" parent="22" name="FK_PATIENT_ID">
+      <ModifiedTimestamp>2018-11-05.18:06:05</ModifiedTimestamp>
+      <ColNames>PATIENT_ID</ColNames>
+      <RefSchemaName>ISHRAK</RefSchemaName>
+      <RefTableName>BASIC_INFO</RefTableName>
+      <RefKeyName>PK_PATIENT_ID</RefKeyName>
+      <OnDelete>restrict</OnDelete>
+    </foreign-key>
+  </database-model>
+</dataSource>
