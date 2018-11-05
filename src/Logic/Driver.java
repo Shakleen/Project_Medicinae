@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,10 +21,8 @@ public class Driver extends Application {
         primaryStage.show();
     }
 
-
     public static void main(String[] args) {
         Print();
-
         launch(args);
     }
 
