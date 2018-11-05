@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Driver extends Application {
@@ -25,25 +24,12 @@ public class Driver extends Application {
     public static void main(String[] args) {
         Print();
 
-        ArrayList<String> Column_Name = new ArrayList<>();
-        ArrayList<String> Column_Info = new ArrayList<>();
-        ArrayList<Boolean> Column_Type = new ArrayList<>();
-
-        Column_Name.add("PATIENT_NAME");    Column_Info.add("Shakleen");  Column_Type.add(true);
-        Column_Name.add("AGE");             Column_Info.add("10");      Column_Type.add(false);
-
-        boolean con = B_Database.B_database_instance.UpdateInformation(
-                "7", Column_Name, Column_Type, Column_Info
-        );
-        if (con)    Print();
-        else        System.out.println("Failed to update!");
-
         launch(args);
     }
 
     public static void Print(){
         try{
-            ResultSet rs = B_Database.B_database_instance.GetStoredInformation();
+            ResultSet rs = B_Database.B_database_instance.GetBasicInformation();
 
             if (rs == null){
                 System.out.println("Result set is null!");

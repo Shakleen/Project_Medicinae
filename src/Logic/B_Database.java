@@ -69,19 +69,40 @@ public class B_Database {
      * @param AdmissionDate The patient's admission date.
      * @return
      */
-    public boolean InsertInformation(String Name, Integer Age, String Sex, String Address, LocalDate AdmissionDate){
-        System.out.println("Inputted time is " + df.format(AdmissionDate));
+    public boolean InsertBasicInformation(String Name, Integer Age, String Sex, String Address, LocalDate AdmissionDate){
         query = "INSERT INTO BASIC_INFO (PATIENT_ID, PATIENT_NAME, AGE, SEX, ADDRESS, ADMISSION_DATE)" + "VALUES" +
                 "(" +
                             "SEQ_PATIENT_ID.NEXTVAL, " +
                             "'" + Name + "', " +
-                            Age + ", " +
+                            Age.toString() + ", " +
                             "'" + Sex.toUpperCase() + "', " +
                             "'" + Address + "', " +
                             "TO_DATE('" + df.format(AdmissionDate) + "', 'dd/mm/yyyy')" +
                 ")";
 
         return HandleUpdateExecution();
+    }
+
+
+    /**
+     * Method for inserting patient phone numbers.
+     * @param ID the D of the patient whose phone numbers are to be added.
+     * @param PhoneNumbers the list of phone numbers to be added.
+     * @return true if addition is successful. False otherwise.
+     */
+    public boolean InsertPhoneNumbers(Integer ID, ArrayList<String> PhoneNumbers){
+        boolean con = false;
+
+        for(int i = 0; i < PhoneNumbers.size(); ++i) {
+            query = "INSERT INTO PATIENT_PHONE_NUMBERS (PATIENT_ID, PHONE_NUMBER) VALUES" +
+                    "(" +
+                        ID.toString() + ", " +
+                        "'" + PhoneNumbers.get(i) + "'" +
+                    ")";
+            con = HandleUpdateExecution();
+        }
+
+        return con;
     }
 
 
@@ -93,7 +114,7 @@ public class B_Database {
      * @param Column_Information the information the column should have.
      * @return true if information update was successful. False otherwise.
      */
-    public boolean UpdateInformation(String ID, ArrayList<String> Column_Names, ArrayList<Boolean> Column_Type, ArrayList<String> Column_Information){
+    public boolean UpdateBasicInformation(Integer ID, ArrayList<String> Column_Names, ArrayList<Boolean> Column_Type, ArrayList<String> Column_Information){
         query = "UPDATE BASIC_INFO SET ";
 
         // Go through each column name and information and add it to the query statement.
@@ -105,7 +126,7 @@ public class B_Database {
 
             // Based on the index one of the following will be appended at each index.
             if (i < Column_Names.size()-1)  query += ", ";
-            else                            query += " WHERE PATIENT_ID = " + ID;
+            else                            query += " WHERE PATIENT_ID = " + ID.toString();
         }
 
         return HandleUpdateExecution();
@@ -116,8 +137,20 @@ public class B_Database {
      * Method for getting information stored in the data base.
      * @return result stored in resultset if successful, null otherwise.
      */
-    public ResultSet GetStoredInformation(){
+    public ResultSet GetBasicInformation(){
         query = "SELECT * FROM BASIC_INFO";
+        if (ResultSetHandler()) return resultSet;
+        else                    return null;
+    }
+
+
+    /**
+     * Method for getting phone numbers of a specific patient ID.
+     * @param ID the ID of the patient whose phone numbers are desired.
+     * @return a result set containing the information if successfully retrieved or null otherwise.
+     */
+    public ResultSet GetPhoneNumbers(Integer ID){
+        query = "SELECT PHONE_NUMBER FROM PATIENT_PHONE_NUMBERS WHERE PATIENT_ID = " + ID.toString();
         if (ResultSetHandler()) return resultSet;
         else                    return null;
     }
