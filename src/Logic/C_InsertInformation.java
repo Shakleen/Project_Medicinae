@@ -19,11 +19,35 @@ public class C_InsertInformation {
     @FXML private ComboBox<String> FX_ComboBox_Sex;
     @FXML private DatePicker FX_DatePicker_Admission;
 
+    private final int X = 200;
+    private final int Y = 25;
+
     public void initialize(){
+        FX_TextField_Name.setMinSize(X, Y);
+        FX_TextField_Address.setMinSize(X, Y);
+        FX_ComboBox_Age.setMinSize(X, Y);
+        FX_ComboBox_Sex.setMinSize(X, Y);
+        FX_DatePicker_Admission.setMinSize(X, Y);
+
         ComboBoxArray = new ArrayList<>();
-        for(int i = 0; i < 10; ++i){
-            ComboBoxArray.add(new ComboBox<>(FXCollections.observableArrayList("Temp", "Temp")));
-            FX_GridPane.add(new Label("Temp combos"), 1, 6+i);
+        for(int i = 0; i < B_Database.ListOfColumns.size(); ++i){
+            E_ColumnInfo columnInfo = B_Database.ListOfColumns.get(i);
+            ComboBox<String> TempComboBox = new ComboBox<>();
+            ObservableList<String> list = FXCollections.observableArrayList();
+
+            switch (columnInfo.ColumnType){
+                case 1:
+                    for (int j = 0; j < columnInfo.DomainValues.size(); ++j) list.add(columnInfo.DomainValues.get(j));
+                    break;
+                case 2:
+                    for (Integer j = columnInfo.LowerLimit; j <= columnInfo.UpperLimit; ++j) list.add(j.toString());
+                    break;
+            }
+
+            TempComboBox.setMinSize(X, Y);
+            TempComboBox.setItems(list);
+            ComboBoxArray.add(TempComboBox);
+            FX_GridPane.add(new Label(columnInfo.ColumnName), 1, 6+i);
             FX_GridPane.add(ComboBoxArray.get(i), 2, 6+i);
         }
     }

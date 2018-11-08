@@ -23,6 +23,7 @@ public class B_Database {
     private final String ColumnFileName = "ColumnNames.txt";        // Name of the file where column information is kept.
     private final String RecordFileName = "Record_Statements.sql";  // Name of the file where record sql statements are kept.
     private final String TableFileName = "Table_Statements.sql";    // Name of the file where table sql statements are kept.
+    public static ArrayList<E_ColumnInfo> ListOfColumns;
 
     // This is a static instance of the class. It will be the only object that will handle the communication with the database.
     public static B_Database B_database_instance = new B_Database("ishrak", "dragonsword05");
@@ -40,10 +41,13 @@ public class B_Database {
             Class.forName("oracle.jdbc.OracleDriver");
             String dbURL = "jdbc:oracle:thin:@localhost:1521:xe";
             connection = DriverManager.getConnection(dbURL, name, password);
-
-            if(connection != null) statement = connection.createStatement();
+            if(connection != null){
+                statement = connection.createStatement();
+                ListOfColumns = new ArrayList<>();
+                GetColumnInfoFromFile();
+            }
         }
-        catch (ClassNotFoundException | SQLException ex){
+        catch (ClassNotFoundException | SQLException | Defined_Exceptions ex){
             ex.printStackTrace();
         }
     }
@@ -77,7 +81,36 @@ public class B_Database {
      * Method to get the column information from file.
      * @return true if successful, false otherwise.
      */
-    public boolean SetupTableColumnsFromFile() throws Defined_Exceptions{
+    private boolean SetupTableColumnsFromFile() throws Defined_Exceptions{
+        if (GetColumnInfoFromFile()){
+            for(int i = 0; i < ListOfColumns.size(); ++i){
+                E_ColumnInfo column = ListOfColumns.get(i);
+
+                switch (column.ColumnType){
+                    case 1:
+                        AddColumnWithCheck(column.ColumnName, column.ColumnType, column.ColumnSize, column.DomainValues, false);
+                         break;
+                    case 2:
+                        AddColumnWithCheck(column.ColumnName, column.ColumnType, column.UpperLimit, column.LowerLimit, false);
+                        break;
+                    case 3:// TODO Date
+                        break;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Method for retrieving column related information from file and storing them into a list.
+     * @return true if successful, false otherwise.
+     * @throws Defined_Exceptions
+     */
+    private boolean GetColumnInfoFromFile()  throws Defined_Exceptions{
         String ColumnName = null, LineRead = null, temp = null;
         Integer ColumnType = null, ColumnSize = null;
         ArrayList<String> DomainValues = null;
@@ -123,20 +156,19 @@ public class B_Database {
                             if (LineRead != null) if (LineRead.length() > 0) DomainValues.add(LineRead);
                         } while (LineRead != null);
 
-                        // Execute add to column statement
-                        AddColumnWithCheck(ColumnName, ColumnType, ColumnSize, DomainValues, false);
+                        ListOfColumns.add(new E_ColumnInfo(ColumnName, ColumnSize, ColumnType, true, DomainValues));
                         break;
 
                     // Column is of type number. So constraint parameters will be only Upper and lower limit.
                     case 2:
-                        Integer UpperLimit = B_FileSystem.B_FileSystem_instance.ReadFromFileNextInt();
-                        B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
                         Integer LowerLimit = B_FileSystem.B_FileSystem_instance.ReadFromFileNextInt();
+                        B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+                        Integer UpperLimit = B_FileSystem.B_FileSystem_instance.ReadFromFileNextInt();
                         B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
                         B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
                         B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
                         System.out.println("Name = " + ColumnName + " type = " + ColumnType + " U = " + UpperLimit + " L = " + LowerLimit);
-                        AddColumnWithCheck(ColumnName, ColumnType, UpperLimit, LowerLimit, false);
+                        ListOfColumns.add(new E_ColumnInfo(ColumnName, ColumnType, true, UpperLimit, LowerLimit));
                         break;
 
                     // TODO Column is of type Date
@@ -518,6 +550,26 @@ public class B_Database {
         } else System.out.println("UpdateColumnList - Failed to setup file reader for columnName");
 
         return false;
+    }
+
+
+    /**
+     * Method for getting the total number of columns in the table.
+     * @return number if successful otherwise null.
+     */
+    public Integer GetTotalColumnNumber(){
+        // COLUMN_NAME FROM USER_TAB_COLUMNS WHERE TABLE_NAME='IN_DEPTH_INFO'
+        query = "SELECT COUNT(*) FROM USER_TAB_COLUMNS WHERE TABLE_NAME='IN_DEPTH_INFO'";
+        try {
+            ResultSet rs = statement.executeQuery(query);
+            if (rs != null) {
+                rs.next();
+                return rs.getInt(1);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
