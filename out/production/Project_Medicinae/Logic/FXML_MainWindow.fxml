@@ -10,7 +10,7 @@
           vgap="20" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.172-ea" fx:controller="Logic.C_MainWindow">
 
     <!-- Button for adding information -->
-    <Button minHeight="75" minWidth="250" text="Insert Information" GridPane.columnIndex="1" GridPane.rowIndex="1">
+    <Button fx:id="FX_Button_Insert" minHeight="75" minWidth="250" text="Insert Information" GridPane.columnIndex="1" GridPane.rowIndex="1">
         <graphic>
             <ImageView fx:id="FX_ImageView_InsertInfo" />
         </graphic>

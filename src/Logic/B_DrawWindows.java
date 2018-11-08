@@ -1,14 +1,13 @@
 package Logic;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -28,14 +27,9 @@ import java.util.Optional;
  */
 public class B_DrawWindows {
     public static B_DrawWindows B_DrawWindows_instance = new B_DrawWindows();
-    public static Stage TeacherStage;
-    public static FXMLLoader TeacherFXMLLoader;
-    public static Parent TeacherRoot;
-    public static Stage AdminStage;
-    public static FXMLLoader AdminFXMLLoader;
-    public static Parent AdminRoot;
-    public static Callback<ListView<String>, ListCell<String>> cellColor;
-    public static Background ListViewBackground;
+    public static Stage Stage;
+    public static FXMLLoader FXMLLoader;
+    public static Parent Root;
     private static javafx.scene.control.Dialog<ButtonType> Dialog;
     private static  FXMLLoader fxmlLoader;
     private static  DialogPane dialogPane;
@@ -45,66 +39,33 @@ public class B_DrawWindows {
     private static  Alert alert;
     private static  Optional<ButtonType> AlertResult;
 
-    private B_DrawWindows(){
-        ListViewBackground = new Background(
-                new BackgroundFill(
-                        Color.color(0.25,0.25,0.25,1),
-                        CornerRadii.EMPTY,
-                        Insets.EMPTY
-                )
-        );
-        cellColor = new Callback<>() {
-            @Override
-            public ListCell<String> call(ListView<String> param) {
-                ListCell <String> cell = new ListCell<String>(){
-                    @Override
-                    protected void updateItem(String std, boolean empty) {
-                        super.updateItem(std, empty);
-                        setFont(Font.font("Arial", 16));
-                        setTextFill(Color.color(0, 1, 0.86, 1));
+    private B_DrawWindows(){}
 
-                        if (empty){
-                            setText("- - -");
-                        } else {
-                            setText(std);
-                        }
-                    }
-                };
 
-                // Setting cell background color
-                cell.backgroundProperty().setValue(ListViewBackground);
-
-                return cell;
-            }
-        };
-        FontName = "Arial";
-        DialogStyleCSS = "dialog.css";
-        DialogBackground = new Background(
-                new BackgroundFill(
-                        Color.GRAY,
-                        CornerRadii.EMPTY,
-                        Insets.EMPTY
-                )
-        );
-
+    /**
+     * Method for drawing a stage.
+     * @param FXML_FileName name of the FXML file we wish to draw on stage.
+     * @param StageTitle the tile of the stage
+     * @param Height the height of window
+     * @param Width the width of the window
+     * @return true if successful, false otherwise.
+     */
+    public boolean DrawNewStage(String FXML_FileName, String StageTitle, Integer Height, Integer Width){
         try {
-            TeacherStage = new Stage();
-            TeacherFXMLLoader = new FXMLLoader();
-            TeacherFXMLLoader.setLocation(getClass().getResource("TeacherMainWindow.fxml"));
-            TeacherRoot = TeacherFXMLLoader.load();
-            TeacherStage.setTitle("Attendance System - Teacher");
-            TeacherStage.setScene(new Scene(TeacherRoot, 1280, 720));
-
-            AdminStage = new Stage();
-            AdminFXMLLoader = new FXMLLoader();
-            AdminFXMLLoader.setLocation(getClass().getResource("AdminMainWindow.fxml"));
-            AdminRoot = AdminFXMLLoader.load();
-            AdminStage.setTitle("Attendance System - Admin");
-            AdminStage.setScene(new Scene(AdminRoot, 1280, 720));
+            Stage = new Stage();
+            FXMLLoader = new FXMLLoader();
+            FXMLLoader.setLocation(getClass().getResource(FXML_FileName));
+            Root = FXMLLoader.load();
+            Stage.setTitle(StageTitle);
+            Stage.setScene(new Scene(Root, Width, Height));
+            Stage.show();
+            return true;
         }
         catch(IOException e){
             e.printStackTrace();
         }
+
+        return false;
     }
 
     /**
@@ -160,14 +121,6 @@ public class B_DrawWindows {
         dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add(getClass().getResource(DialogStyleCSS).toExternalForm());
         AlertResult = alert.showAndWait();
-    }
-
-    public void DrawTeacherMainStage(){
-        TeacherStage.show();
-    }
-
-    public void DrawAdminMainStage(){
-        AdminStage.show();
     }
 
     public static javafx.scene.control.Dialog<ButtonType> getDialog() {

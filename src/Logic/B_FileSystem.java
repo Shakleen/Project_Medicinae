@@ -3,6 +3,8 @@ package Logic;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -30,56 +32,97 @@ public class B_FileSystem {
 
 
     /**
+     * Used to set up File Reader.
+     * @param FileName the name of the file to read from.
+     * @return true if successful. False otherwise.
+     */
+    public boolean SetUpFileReader(String FileName){
+        try{
+            CloseFileReader();
+            fileReader = new Scanner(new FileReader(FileName));
+            return true;
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    /**
+     * Used to set up File Reader with delimiter
+     * @param FileName the name of the file to read from.
+     * @return true if successful. False otherwise.
+     */
+    public boolean SetUpFileReader(String FileName, String Delimiter){
+        if (SetUpFileReader(FileName)){
+            fileReader.useDelimiter(Delimiter);
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
      * Method for writing a single line to a proper file.
      * @param Line the line that is to be writen to file.
      * @param FileName the file where the line should be written.
      * @param Append whether to append to existing data (true) or clear out and start fresh (false).
+     * @return true if successful. False otherwise.
      */
-    public void WriteToFile(String Line, String FileName, boolean Append){
+    public boolean WriteToFile(String Line, String FileName, boolean Append){
+        boolean task = false;
         try{
             fileWriter = new FileWriter(FileName, Append);
             fileWriter.write(Line);
+            task = true;
         } catch(IOException e){
             e.printStackTrace();
+            task = false;
         } finally {
             if (fileWriter != null){
                 CloseFileWriter();
             }
         }
+
+        return task;
     }
 
 
     /**
-     * Method to read from file.
-     * @param FileName the file where we want to read from.
-     * @return the next line from the file name specified or null if any issue occured.
+     * Method to read from file the next line.
+     * @return the next line from the file name specified or null if any issue occurred.
      */
-    public String ReadFromFile(String FileName){
-        try {
-            System.out.println(FileName);
-            if (fileReader == null) fileReader = new Scanner(new FileReader(FileName));
-
-            if (fileReader.hasNext()) return fileReader.nextLine();
-            else                      return null;
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+    public String ReadFromFileNextLine(){
+        if (fileReader.hasNextLine()) return fileReader.nextLine();
         return null;
     }
 
 
     /**
-     * Used to update the information stored in the database from the sql file.
-     * Used only when the application had data stored before an unexpected failure.
+     * Method to read from file the next int.
+     * @return the next integer from the file name specified or null if any issue occurred.
      */
-    public void UpdateDatabase(){
-        String exec;
-        while(true){
-            exec = B_FileSystem.B_FileSystem_instance.ReadFromFile("SQL_Statements.sql");
+    public Integer ReadFromFileNextInt(){
+        if (fileReader.hasNextInt()) return fileReader.nextInt();
+        return null;
+    }
 
-            if (exec == null)   break;
-            else                B_Database.B_database_instance.ExecuteStatement(exec);
-        }
+
+    /**
+     * Method to skip delimeter of file reader.
+     */
+    public void FileReaderSkipDelimeter(){
+        if (fileReader != null) fileReader.skip(fileReader.delimiter());
+    }
+
+
+    /**
+     * Method for reading the next string.
+     * @return the next string read or null.
+     */
+    public String ReadFromFileNext(){
+        if (fileReader.hasNext()) return fileReader.next();
+        return null;
     }
 
 
@@ -88,9 +131,23 @@ public class B_FileSystem {
      */
     private void CloseFileWriter(){
         try{
-            fileWriter.close();
+            if (fileWriter != null){
+                fileWriter.close();
+                fileWriter = null;
+            }
         } catch (IOException e){
             e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Used to close File reader with proper exception checking.
+     */
+    private void CloseFileReader(){
+        if (fileReader != null){
+            fileReader.close();
+            fileReader = null;
         }
     }
 }

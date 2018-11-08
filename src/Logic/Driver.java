@@ -6,7 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,6 +21,12 @@ public class Driver extends Application {
     }
 
     public static void main(String[] args) {
+        try{
+            B_Database.B_database_instance.UpdateDatabase();
+        } catch (Defined_Exceptions de){
+            System.out.println("Failed because of " + de.ExceptionName);
+        }
+        B_Database.B_database_instance.DropColumnWithConstraint("DESEASE_TYPE");
         Print();
         launch(args);
     }

@@ -6,7 +6,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Logic.C_InsertInformation"
-            prefHeight="400.0" prefWidth="600.0">
+<ScrollPane fx:id="FX_ScrollablePane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Logic.C_InsertInformation">
+    <GridPane fx:id="FX_GridPane" alignment="TOP_LEFT" hgap="15" vgap="15">
+        <Label text="Name" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <TextField fx:id="FX_TextField_Name" text="Input name" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
 
-</GridPane>
+        <Label text="Age" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="FX_ComboBox_Age" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+
+        <Label text="Sex" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="FX_ComboBox_Sex" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+
+        <Label text="Address" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <TextField fx:id="FX_TextField_Address" text="Input address" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
+
+        <Label text="Date of admission" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        <DatePicker fx:id="FX_DatePicker_Admission" GridPane.rowIndex="5" GridPane.columnIndex="2"/>
+    </GridPane>
+</ScrollPane>

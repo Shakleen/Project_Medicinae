@@ -1,6 +1,9 @@
 package Logic;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -11,9 +14,32 @@ public class C_MainWindow {
     @FXML private ImageView FX_ImageView_Help;
     @FXML private ImageView FX_ImageView_Account;
     @FXML private ImageView FX_ImageView_Exit;
+    @FXML private Button FX_Button_Insert;
 
+
+    /**
+     * Method that is called when application first loads.
+     * Sets up necessary variables, functions and event handlers.
+     */
     public void initialize(){
+        // Sets up the images for the buttons
         SetUpImages(75, 100, true);
+
+        // Event handler to handle insert button click
+        FX_Button_Insert.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                boolean con = B_DrawWindows.B_DrawWindows_instance.DrawNewStage(
+                        "FXML_InsertInformation.fxml",
+                        "Insert new record",
+                        600,
+                        800
+                );
+
+                if (con) System.out.println("New stage drawn");
+                else System.out.println("Draw failed!");
+            }
+        });
     }
 
 
