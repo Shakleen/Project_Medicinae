@@ -85,7 +85,7 @@ public class B_DrawWindows {
             Dialog.setTitle(TitleText);
             Dialog.setHeaderText(HeaderText);
             dialogPane = Dialog.getDialogPane();
-            dialogPane.getStylesheets().add(getClass().getResource(DialogStyleCSS).toExternalForm());
+//            dialogPane.getStylesheets().add(getClass().getResource(DialogStyleCSS).toExternalForm());
             fxmlLoader.setLocation(getClass().getResource(DialogName));
             Dialog.getDialogPane().setContent(fxmlLoader.load());
             Dialog.getDialogPane().setBackground(DialogBackground);
@@ -119,7 +119,7 @@ public class B_DrawWindows {
         alert.setHeaderText(HeaderText);
         alert.setContentText(ContentText);
         dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource(DialogStyleCSS).toExternalForm());
+//        dialogPane.getStylesheets().add(getClass().getResource(DialogStyleCSS).toExternalForm());
         AlertResult = alert.showAndWait();
     }
 

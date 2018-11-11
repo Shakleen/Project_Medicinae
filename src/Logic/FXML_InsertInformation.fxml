@@ -1,26 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<ScrollPane fx:id="FX_ScrollablePane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Logic.C_InsertInformation">
-    <GridPane fx:id="FX_GridPane" alignment="TOP_LEFT" hgap="15" vgap="15">
-        <Label text="Name" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-        <TextField fx:id="FX_TextField_Name" text="Input name" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+<?import javafx.scene.text.Font?>
+<ScrollPane fx:id="FX_ScrollablePane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Logic.C_InsertInformation">
+    <VBox alignment="TOP_CENTER">
+        <Label text="Basic Information">
+            <font>
+                <Font size="24"/>
+            </font>
+            <VBox.margin>
+                <Insets bottom="25.0" />
+            </VBox.margin>
+        </Label>
 
-        <Label text="Age" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-        <ComboBox fx:id="FX_ComboBox_Age" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+        <GridPane fx:id="FX_GridPane" alignment="TOP_LEFT" hgap="15" vgap="15">
+            <Label text="Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="FX_TextField_Name" text="Input name" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
-        <Label text="Sex" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-        <ComboBox fx:id="FX_ComboBox_Sex" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+            <Label text="Age" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <ComboBox fx:id="FX_ComboBox_Age" GridPane.columnIndex="4" GridPane.rowIndex="1" />
 
-        <Label text="Address" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-        <TextField fx:id="FX_TextField_Address" text="Input address" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
+            <Label text="Address" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="FX_TextField_Address" text="Input address" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
-        <Label text="Date of admission" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-        <DatePicker fx:id="FX_DatePicker_Admission" GridPane.rowIndex="5" GridPane.columnIndex="2"/>
-    </GridPane>
+            <Label text="Sex" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <ComboBox fx:id="FX_ComboBox_Sex" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+
+            <Label text="Date of admission" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <DatePicker fx:id="FX_DatePicker_Admission" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+        </GridPane>
+
+        <Button fx:id="FX_Button_Add" text="Insert Information" minHeight="50" minWidth="200">
+             <VBox.margin>
+                    <Insets top="25.0" />
+             </VBox.margin>
+        </Button>
+    </VBox>
 </ScrollPane>

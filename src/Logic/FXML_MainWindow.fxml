@@ -17,7 +17,7 @@
     </Button>
 
     <!-- Button for viewing information -->
-    <Button minHeight="75" minWidth="250" text="View Information" GridPane.columnIndex="1" GridPane.rowIndex="2">
+    <Button fx:id="FX_Button_View" minHeight="75" minWidth="250" text="View Information" GridPane.columnIndex="1" GridPane.rowIndex="2">
         <graphic>
             <ImageView fx:id="FX_ImageView_ViewInfo" />
         </graphic>

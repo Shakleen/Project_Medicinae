@@ -27,7 +27,7 @@ public class Driver extends Application {
 //            System.out.println("Failed because of " + de.ExceptionName);
 //        }
 //        System.out.println(B_Database.B_database_instance.GetTotalColumnNumber());
-        Print();
+//        Print();
         launch(args);
     }
 

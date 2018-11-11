@@ -80,40 +80,41 @@
     <session id="-1783124351">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="17" />
+          <entry key="project.closed" value="20" />
           <entry key="project.open.time.10" value="1" />
           <entry key="project.open.time.11" value="2" />
           <entry key="project.open.time.12" value="1" />
           <entry key="project.open.time.13" value="2" />
-          <entry key="project.open.time.14" value="2" />
-          <entry key="project.open.time.15" value="3" />
-          <entry key="project.open.time.16" value="1" />
+          <entry key="project.open.time.14" value="3" />
+          <entry key="project.open.time.15" value="4" />
+          <entry key="project.open.time.16" value="2" />
           <entry key="project.open.time.17" value="3" />
           <entry key="project.open.time.18" value="1" />
+          <entry key="project.open.time.21" value="1" />
           <entry key="project.open.time.25" value="1" />
           <entry key="project.open.time.28" value="1" />
           <entry key="project.open.time.5" value="1" />
-          <entry key="project.opened" value="19" />
+          <entry key="project.opened" value="23" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="css" value="35" />
           <entry key="dummy" value="42" />
-          <entry key="fxml" value="942" />
-          <entry key="java" value="31597" />
+          <entry key="fxml" value="1417" />
+          <entry key="java" value="37999" />
           <entry key="sql" value="1308" />
-          <entry key="txt" value="149" />
+          <entry key="txt" value="464" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CSS" value="35" />
-          <entry key="JAVA" value="31597" />
-          <entry key="PLAIN_TEXT" value="191" />
+          <entry key="JAVA" value="37999" />
+          <entry key="PLAIN_TEXT" value="506" />
           <entry key="SQL" value="619" />
           <entry key="Scratch" value="689" />
-          <entry key="XML" value="942" />
+          <entry key="XML" value="1417" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
@@ -121,11 +122,11 @@
           <entry key="CLASS" value="4" />
           <entry key="CSS" value="2" />
           <entry key="Image" value="2" />
-          <entry key="JAVA" value="52" />
-          <entry key="PLAIN_TEXT" value="39" />
-          <entry key="SQL" value="22" />
+          <entry key="JAVA" value="71" />
+          <entry key="PLAIN_TEXT" value="45" />
+          <entry key="SQL" value="25" />
           <entry key="Scratch" value="1" />
-          <entry key="XML" value="5" />
+          <entry key="XML" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
@@ -134,12 +135,12 @@
           <entry key="DESEASE_TYPE" value="1" />
           <entry key="class" value="4" />
           <entry key="css" value="2" />
-          <entry key="fxml" value="5" />
-          <entry key="java" value="52" />
+          <entry key="fxml" value="8" />
+          <entry key="java" value="71" />
           <entry key="png" value="2" />
-          <entry key="sql" value="23" />
+          <entry key="sql" value="26" />
           <entry key="text" value="3" />
-          <entry key="txt" value="35" />
+          <entry key="txt" value="41" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts" />
@@ -155,8 +156,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Logic/Driver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="638">
-              <caret line="30" column="16" selection-start-line="30" selection-start-column="16" selection-end-line="30" selection-end-column="16" />
+            <state relative-caret-position="570">
+              <caret line="29" column="18" lean-forward="true" selection-start-line="23" selection-start-column="10" selection-end-line="29" selection-end-column="18" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#start#0;class#Driver#0" />
@@ -166,13 +167,24 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Logic/C_InsertInformation.java">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Logic/FXML_ViewInformation.fxml">
+          <provider editor-type-id="JavaFX-Scene-Builder" />
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-242">
-              <caret line="29" column="31" selection-start-line="29" selection-start-column="31" selection-end-line="29" selection-end-column="31" />
+            <state relative-caret-position="193">
+              <caret line="15" column="43" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Logic/C_ViewInformation.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="222">
+              <caret line="17" column="4" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="4" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="method#SetUpTableColumns#0;class#C_ViewInformation#0" />
               </folding>
             </state>
           </provider>
@@ -201,13 +213,14 @@
       <find>.txt</find>
       <find>ReadFromFile</find>
       <find>ReadFromFileNextLine</find>
-      <find>RecordFileName</find>
       <find>&quot;Record_Statements.sql&quot;</find>
       <find>&quot;Table_Statements.sql&quot;</find>
       <find>Execution of statement failed!</find>
       <find>Failed to drop column!</find>
       <find>Column drop successful!</find>
       <find>WriteToFile</find>
+      <find>`</find>
+      <find>RecordFileName</find>
     </findStrings>
   </component>
   <component name="FindManager">
@@ -234,21 +247,26 @@
         <option value="$PROJECT_DIR$/src/Database_SQL/Database_SQL.sql" />
         <option value="$PROJECT_DIR$/src/Database_SQL/Statements.sql" />
         <option value="$PROJECT_DIR$/SQL_Statements.sql" />
-        <option value="$PROJECT_DIR$/Record_Statements.sql" />
-        <option value="$PROJECT_DIR$/src/Logic/FXML_MainWindow.fxml" />
-        <option value="$PROJECT_DIR$/src/Logic/C_MainWindow.java" />
-        <option value="$PROJECT_DIR$/src/Logic/B_DrawWindows.java" />
-        <option value="$PROJECT_DIR$/src/Logic/FXML_InsertInformation.fxml" />
         <option value="$PROJECT_DIR$/src/Logic/Defined_Exceptions.java" />
         <option value="$PROJECT_DIR$/Table_Statements.sql" />
         <option value="$PROJECT_DIR$/src/Logic/B_FileSystem.java" />
         <option value="$PROJECT_DIR$/Temp.text" />
         <option value="$PROJECT_DIR$/Temp.txt" />
-        <option value="$PROJECT_DIR$/ColumnNames.txt" />
         <option value="$PROJECT_DIR$/src/Logic/E_ColumnInfo.java" />
-        <option value="$PROJECT_DIR$/src/Logic/Driver.java" />
+        <option value="$PROJECT_DIR$/src/Logic/FXML_InsertInformation.fxml" />
+        <option value="$PROJECT_DIR$/ColumnNames.txt" />
+        <option value="$PROJECT_DIR$/A.txt" />
+        <option value="$PROJECT_DIR$/Record_Statements.sql" />
         <option value="$PROJECT_DIR$/src/Logic/B_Database.java" />
+        <option value="$PROJECT_DIR$/src/Logic/Driver.java" />
         <option value="$PROJECT_DIR$/src/Logic/C_InsertInformation.java" />
+        <option value="$PROJECT_DIR$/src/Logic/B_DrawWindows.java" />
+        <option value="$PROJECT_DIR$/src/Logic/FXML_MainWindow.fxml" />
+        <option value="$PROJECT_DIR$/src/Logic/C_MainWindow.java" />
+        <option value="$PROJECT_DIR$/src/Logic/FXML_ViewInformation.fxml" />
+        <option value="$PROJECT_DIR$/src/Logic/E_Record.java" />
+        <option value="$PROJECT_DIR$/src/Logic/E_RecordData.java" />
+        <option value="$PROJECT_DIR$/src/Logic/C_ViewInformation.java" />
       </list>
     </option>
   </component>
@@ -274,7 +292,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -297,7 +315,7 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -311,7 +329,7 @@
     <property name="OverrideImplement.combined" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1541700621788" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1541950872437" />
     <property name="database.console.LAST_STATE" value="false" />
     <property name="dynamic.classpath" value="false" />
     <property name="last_opened_file_path" value="C:/Program Files/Java/javafx-sdk-11/lib" />
@@ -436,16 +454,21 @@
       <workItem from="1541691210531" duration="4474000" />
       <workItem from="1541698858036" duration="74000" />
       <workItem from="1541699676722" duration="918000" />
+      <workItem from="1541740757390" duration="2135000" />
+      <workItem from="1541746965435" duration="3390000" />
+      <workItem from="1541777308271" duration="2932000" />
+      <workItem from="1541939531271" duration="11151000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="63659000" />
+    <option name="totallyTimeSpent" value="83267000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.19127516" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.19395973" />
       <window_info id="Structure" order="1" weight="0.24966443" />
       <window_info id="Favorites" order="2" />
       <window_info id="Designer" order="3" />
@@ -480,6 +503,42 @@
       <window_info anchor="right" id="Palette&#9;" order="8" />
       <window_info anchor="right" id="Theme Preview" order="9" />
     </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.19395973" />
+      <window_info id="Structure" order="1" weight="0.24966443" />
+      <window_info id="Favorites" order="2" />
+      <window_info id="Designer" order="3" />
+      <window_info id="Image Layers" order="4" />
+      <window_info id="UI Designer" order="5" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32907802" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32907802" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Application Servers" order="7" />
+      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Problems" order="9" />
+      <window_info anchor="bottom" id="Changes" order="10" />
+      <window_info anchor="bottom" id="Profiler" order="11" />
+      <window_info anchor="bottom" id="Event Log" order="12" />
+      <window_info anchor="bottom" id="Messages" order="13" weight="0.32907802" />
+      <window_info anchor="bottom" id="Terminal" order="14" />
+      <window_info anchor="bottom" id="Database Console" order="15" weight="0.32907802" />
+      <window_info anchor="bottom" id="Database Changes" order="16" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="JetGradle" order="3" />
+      <window_info anchor="right" id="Database" order="4" weight="0.3295302" />
+      <window_info anchor="right" id="Palette" order="5" />
+      <window_info anchor="right" id="Maven Projects" order="6" />
+      <window_info anchor="right" id="Capture Analysis" order="7" />
+      <window_info anchor="right" id="Palette&#9;" order="8" />
+      <window_info anchor="right" id="Theme Preview" order="9" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -561,21 +620,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Logic/C_MainWindow.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="464">
-          <caret line="21" column="34" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Logic/FXML_MainWindow.fxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="12" column="35" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="35" />
-        </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder" />
-    </entry>
     <entry file="jar://C:/Program Files/Java/javafx-sdk-11/lib/javafx.graphics.jar!/javafx/scene/layout/GridPane.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="622">
@@ -590,27 +634,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Logic/B_DrawWindows.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="36" column="42" selection-start-line="36" selection-start-column="42" selection-end-line="36" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Logic/Defined_Exceptions.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="332">
           <caret line="15" column="40" selection-start-line="15" selection-start-column="40" selection-end-line="15" selection-end-column="40" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Logic/FXML_InsertInformation.fxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-        </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder" />
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk-11.0.1/lib/src.zip!/java.sql/java/sql/Statement.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -627,27 +656,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk-11.0.1/lib/src.zip!/java.base/java/util/Scanner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="1825" column="19" selection-start-line="1825" selection-start-column="19" selection-end-line="1825" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Table_Statements.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="87">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Record_Statements.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="58">
-          <caret line="2" selection-start-line="2" selection-end-line="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk-11.0.1/lib/src.zip!/java.base/java/lang/String.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="535">
@@ -660,10 +668,26 @@
     <entry file="file://$PROJECT_DIR$/Temp.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/Table_Statements.sql" />
+    <entry file="file://$PROJECT_DIR$/src/Logic/FXML_InsertInformation.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="464">
+          <caret line="16" column="31" selection-start-line="16" selection-start-column="31" selection-end-line="16" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ColumnNames.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="54" selection-start-column="54" selection-end-column="54" />
+        <state relative-caret-position="145">
+          <caret line="5" column="1" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk-11.0.1/lib/src.zip!/java.base/java/util/Scanner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="1842" selection-start-line="1842" selection-end-line="1842" />
         </state>
       </provider>
     </entry>
@@ -672,35 +696,18 @@
         <state relative-caret-position="141">
           <caret line="114" selection-start-line="114" selection-end-line="114" />
           <folding>
-            <element signature="method#SetUpFileReader#0;class#B_FileSystem#0" />
-            <element signature="method#SetUpFileReader#1;class#B_FileSystem#0" />
-            <element signature="method#WriteToFile#0;class#B_FileSystem#0" />
-            <element signature="method#ReadFromFileNextLine#0;class#B_FileSystem#0" />
-            <element signature="method#ReadFromFileNextInt#0;class#B_FileSystem#0" />
             <element signature="e#3272#3273#0" expanded="true" />
-            <element signature="method#ReadFromFileNext#0;class#B_FileSystem#0" />
-            <element signature="method#CloseFileWriter#0;class#B_FileSystem#0" />
-            <element signature="method#CloseFileReader#0;class#B_FileSystem#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Logic/Driver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="638">
-          <caret line="30" column="16" selection-start-line="30" selection-start-column="16" selection-end-line="30" selection-end-column="16" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#start#0;class#Driver#0" />
-            <element signature="method#Print#0;class#Driver#0" />
-          </folding>
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/Record_Statements.sql">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Logic/E_ColumnInfo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="522">
-          <caret line="28" column="50" selection-start-line="28" selection-start-column="50" selection-end-line="28" selection-end-column="50" />
+        <state relative-caret-position="29">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
           <folding>
             <element signature="method#E_ColumnInfo#0;class#E_ColumnInfo#0" />
             <element signature="method#E_ColumnInfo#1;class#E_ColumnInfo#0" />
@@ -709,16 +716,48 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Logic/C_InsertInformation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="773">
+          <caret line="32" column="28" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#initialize#0;class#C_InsertInformation#0" />
+            <element signature="class#4938:5231" />
+            <element signature="method#call#0;class#4938:5231" />
+            <element signature="method#succeeded#0;class#4938:5498" />
+            <element signature="method#failed#0;class#4938:6674" />
+            <element signature="method#cancelled#0;class#4922:7013" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Logic/B_DrawWindows.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1263">
+          <caret line="88" column="71" lean-forward="true" selection-start-line="88" selection-start-column="71" selection-end-line="88" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/A.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="29">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Logic/B_Database.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1653">
-          <caret line="112" column="70" selection-start-line="112" selection-start-column="70" selection-end-line="112" selection-end-column="70" />
+        <state relative-caret-position="1427">
+          <caret line="698" column="43" selection-start-line="698" selection-start-column="43" selection-end-line="698" selection-end-column="43" />
           <folding>
             <element signature="method#B_Database#0;class#B_Database#0" />
             <element signature="method#UpdateDatabase#0;class#B_Database#0" />
             <element signature="method#SetupTableColumnsFromFile#0;class#B_Database#0" />
             <element signature="method#GetColumnInfoFromFile#0;class#B_Database#0" />
-            <element signature="method#ExecuteFileStatements#0;class#B_Database#0" />
+            <element signature="method#CreateTableStructure#0;class#B_Database#0" />
+            <element signature="method#UpdateRecords#0;class#B_Database#0" />
+            <element signature="method#InsertInformation#0;class#B_Database#0" />
             <element signature="method#InsertBasicInformation#0;class#B_Database#0" />
             <element signature="method#InsertPhoneNumbers#0;class#B_Database#0" />
             <element signature="method#UpdateBasicInformation#0;class#B_Database#0" />
@@ -742,12 +781,68 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Logic/C_InsertInformation.java">
+    <entry file="file://$PROJECT_DIR$/src/Logic/FXML_MainWindow.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder" />
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-242">
-          <caret line="29" column="31" selection-start-line="29" selection-start-column="31" selection-end-line="29" selection-end-column="31" />
+        <state relative-caret-position="260">
+          <caret line="19" column="33" selection-start-line="19" selection-start-column="33" selection-end-line="19" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Logic/C_MainWindow.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="251">
+          <caret line="50" column="37" selection-start-line="50" selection-start-column="37" selection-end-line="50" selection-end-column="37" />
+          <folding>
+            <element signature="class#937:1449" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Logic/Driver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="29" column="18" lean-forward="true" selection-start-line="23" selection-start-column="10" selection-end-line="29" selection-end-column="18" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#start#0;class#Driver#0" />
+            <element signature="method#Print#0;class#Driver#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Logic/E_Record.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="58">
+          <caret line="2" column="36" selection-start-line="2" selection-start-column="36" selection-end-line="2" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Logic/E_RecordData.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Logic/FXML_ViewInformation.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="15" column="43" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Logic/C_ViewInformation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="17" column="4" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="4" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#SetUpTableColumns#0;class#C_ViewInformation#0" />
           </folding>
         </state>
       </provider>

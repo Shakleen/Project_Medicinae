@@ -15,6 +15,7 @@ public class C_MainWindow {
     @FXML private ImageView FX_ImageView_Account;
     @FXML private ImageView FX_ImageView_Exit;
     @FXML private Button FX_Button_Insert;
+    @FXML private Button FX_Button_View;
 
 
     /**
@@ -33,11 +34,24 @@ public class C_MainWindow {
                         "FXML_InsertInformation.fxml",
                         "Insert new record",
                         600,
-                        800
+                        700
                 );
 
                 if (con) System.out.println("New stage drawn");
                 else System.out.println("Draw failed!");
+            }
+        });
+
+        // Event handler to handle view button click
+        FX_Button_View.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                boolean con = B_DrawWindows.B_DrawWindows_instance.DrawNewStage(
+                        "FXML_ViewInformation.fxml",
+                        "View records",
+                        600,
+                        700
+                );
             }
         });
     }
