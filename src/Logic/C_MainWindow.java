@@ -8,13 +8,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class C_MainWindow {
-    @FXML private ImageView FX_ImageView_InsertInfo;
     @FXML private ImageView FX_ImageView_SyncInfo;
     @FXML private ImageView FX_ImageView_ViewInfo;
     @FXML private ImageView FX_ImageView_Help;
     @FXML private ImageView FX_ImageView_Account;
     @FXML private ImageView FX_ImageView_Exit;
-    @FXML private Button FX_Button_Insert;
     @FXML private Button FX_Button_View;
 
 
@@ -25,22 +23,6 @@ public class C_MainWindow {
     public void initialize(){
         // Sets up the images for the buttons
         SetUpImages(75, 100, true);
-
-        // Event handler to handle insert button click
-        FX_Button_Insert.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                boolean con = B_DrawWindows.B_DrawWindows_instance.DrawNewStage(
-                        "FXML_InsertInformation.fxml",
-                        "Insert new record",
-                        600,
-                        700
-                );
-
-                if (con) System.out.println("New stage drawn");
-                else System.out.println("Draw failed!");
-            }
-        });
 
         // Event handler to handle view button click
         FX_Button_View.setOnAction(new EventHandler<ActionEvent>() {
@@ -64,11 +46,6 @@ public class C_MainWindow {
      * @param PreserveRatio whether to preserve the ratio of the images
      */
     public void SetUpImages(double Height, double Width, boolean PreserveRatio){
-        FX_ImageView_InsertInfo.setImage(new Image("/Images/Insert_Info.png"));
-        FX_ImageView_InsertInfo.setFitHeight(Height);
-        FX_ImageView_InsertInfo.setFitWidth(Width);
-        FX_ImageView_InsertInfo.setPreserveRatio(PreserveRatio);
-
         FX_ImageView_SyncInfo.setImage(new Image("/Images/Sync_Info.png"));
         FX_ImageView_SyncInfo.setFitHeight(Height);
         FX_ImageView_SyncInfo.setFitWidth(Width);

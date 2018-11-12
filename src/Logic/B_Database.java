@@ -198,7 +198,8 @@ public class B_Database {
                     "ADMISSION_DATE DATE," +
                     "CONSTRAINT PK_PATIENT_ID PRIMARY KEY (PATIENT_ID)," +
                     "CONSTRAINT CHK_SEX CHECK (SEX IN ('MALE', 'FEMALE'))," +
-                    "CONSTRAINT CHK_AGE CHECK (AGE >= 0)" +
+                    "CONSTRAINT CHK_AGE CHECK (AGE >= 0)," +
+                    "CONSTRAINT UN_PATIENT UNIQUE(PATIENT_NAME, AGE, SEX, ADDRESS, ADMISSION_DATE)" +
                 ")";
 
         if (ExecuteStatement(query, 0)){
@@ -403,10 +404,28 @@ public class B_Database {
      * Method for getting information stored in the data base.
      * @return result stored in resultset if successful, null otherwise.
      */
-    public ResultSet GetBasicInformation(){
-        query = "SELECT * FROM BASIC_INFO";
+    public ResultSet GetInformation(){
+        query = "SELECT B.PATIENT_ID, B.PATIENT_NAME, B.AGE, B.SEX, B.ADDRESS, B.ADMISSION_DATE, ";
+        for (int i = 0; i < ListOfColumns.size(); ++i) {
+            query += "I." + ListOfColumns.get(i).ColumnName;
+
+            if (i != ListOfColumns.size() - 1)
+                query += ", ";
+            else
+                query += " FROM BASIC_INFO B, IN_DEPTH_INFO I WHERE B.PATIENT_ID = I.PATIENT_ID ORDER BY B.PATIENT_ID ASC";
+        }
         if (ResultSetHandler()) return resultSet;
         else                    return null;
+    }
+
+
+    /**
+     * Method for getting the total number of records in the database.
+     * @return the total number of records in the database if successful otherwise -1.
+     */
+    public Integer GetTotalRecordNumber(){
+        query = "SELECT MAX(PATIENT_ID) AS MAX FROM BASIC_INFO";
+        return IntegerHandler();
     }
 
 
@@ -415,8 +434,8 @@ public class B_Database {
      * @param ID the ID of the patient whose basic information is to be retrieved.
      * @return result stored in resultset if successful, null otherwise.
      */
-    public ResultSet GetBasicInformation(Integer ID){
-        query = "SELECT * FROM BASIC_INFO WHERE PATIENT_ID = " + ID.toString();
+    public ResultSet GetAddress(Integer ID){
+        query = "SELECT ADDRESS FROM BASIC_INFO B WHERE B.PATIENT_ID = " + ID.toString();
         if (ResultSetHandler()) return resultSet;
         else                    return null;
     }
@@ -689,6 +708,22 @@ public class B_Database {
             e.printStackTrace();
         }
         return false;
+    }
+
+
+    /**
+     * Handles execution of statement and produces a result set. Primarily used to retrieve data.
+     * @return true if successful execution. false otherwise.
+     */
+    private Integer IntegerHandler(){
+        try{
+            resultSet = statement.executeQuery(query);
+            resultSet.next();
+            return resultSet.getInt("MAX");
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return -1;
     }
 
 

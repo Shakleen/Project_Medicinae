@@ -1,5 +1,6 @@
 package Logic;
 
+import com.sun.media.jfxmediaimpl.platform.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -135,6 +136,7 @@ public class C_InsertInformation {
                                     "Information successfully added to database.",
                                     "INFORMATION"
                             );
+                            B_DrawWindows.B_DrawWindows_instance.CloseStage();
                         } else {
                             B_DrawWindows.B_DrawWindows_instance.DrawAlert(
                                     "Failed",

@@ -68,6 +68,14 @@ public class B_DrawWindows {
         return false;
     }
 
+
+    /**
+     * Method to close stage.
+     */
+    public void CloseStage(){
+        Stage.close();
+    }
+
     /**
      * Create the log in dialog.
      * @param DialogName Name of the dialog.

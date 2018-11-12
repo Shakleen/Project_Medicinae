@@ -7,8 +7,20 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.control.skin.VirtualFlow?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Logic.C_ViewInformation"
-            prefHeight="400.0" prefWidth="600.0">
+            fx:id="FX_BorderPane" prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <ToolBar>
+            <Button fx:id="FX_Button_Insert">
+                <graphic>
+                    <ImageView fx:id="FX_ImageView_InsertInfo" />
+                </graphic>
+            </Button>
+        </ToolBar>
+    </top>
 
     <!-- Basic and in depth information display -->
     <center>
@@ -19,6 +31,36 @@
 
     <!--Contact information display-->
     <bottom>
-        <ListView fx:id="FX_ListView_PhoneNumbers" maxHeight="100"/>
+        <HBox>
+            <VBox>
+                <Label text="Address">
+                    <VBox.margin>
+                        <Insets top="10" bottom="10" left="10" right="200"/>
+                    </VBox.margin>
+                </Label>
+                <Label fx:id="FX_Label_Address">
+                    <VBox.margin>
+                        <Insets bottom="10" left="10"/>
+                    </VBox.margin>
+                </Label>
+            </VBox>
+
+            <VBox>
+                <Label text="Phone numbers">
+                    <VBox.margin>
+                        <Insets top="10" bottom="10" left="50" right="10"/>
+                    </VBox.margin>
+                </Label>
+                <ListView fx:id="FX_ListView_PhoneNumbers" maxHeight="100">
+                    <VBox.margin>
+                        <Insets bottom="10" left="50" right="10"/>
+                    </VBox.margin>
+                </ListView>
+            </VBox>
+
+            <VBox>
+                <ProgressBar fx:id="FX_ProgressBar"/>
+            </VBox>
+        </HBox>
     </bottom>
 </BorderPane>

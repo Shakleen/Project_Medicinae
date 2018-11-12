@@ -9,13 +9,6 @@
 <GridPane fx:id="pane" alignment="CENTER_RIGHT" hgap="20" stylesheets="@CSS_MainWindow.css"
           vgap="20" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.172-ea" fx:controller="Logic.C_MainWindow">
 
-    <!-- Button for adding information -->
-    <Button fx:id="FX_Button_Insert" minHeight="75" minWidth="250" text="Insert Information" GridPane.columnIndex="1" GridPane.rowIndex="1">
-        <graphic>
-            <ImageView fx:id="FX_ImageView_InsertInfo" />
-        </graphic>
-    </Button>
-
     <!-- Button for viewing information -->
     <Button fx:id="FX_Button_View" minHeight="75" minWidth="250" text="View Information" GridPane.columnIndex="1" GridPane.rowIndex="2">
         <graphic>
