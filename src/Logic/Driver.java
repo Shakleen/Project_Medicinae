@@ -33,7 +33,7 @@ public class Driver extends Application {
 
     public static void Print(){
         try{
-            ResultSet rs = B_Database.B_database_instance.GetInformation();
+            ResultSet rs = B_Database.B_database_instance.GetInformation(null);
 
             if (rs == null){
                 System.out.println("Result set is null!");

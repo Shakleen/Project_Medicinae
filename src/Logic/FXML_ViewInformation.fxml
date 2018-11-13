@@ -14,10 +14,79 @@
 
     <top>
         <ToolBar>
-            <Button fx:id="FX_Button_Insert">
+            <!-- Button for inserting information -->
+            <Button onAction="#HandleInsertRequest">
                 <graphic>
                     <ImageView fx:id="FX_ImageView_InsertInfo" />
                 </graphic>
+
+                <tooltip>
+                    <Tooltip>
+                        <text>
+                            Insert New Patient Data
+                        </text>
+                    </Tooltip>
+                </tooltip>
+            </Button>
+
+            <!-- Button for editing information -->
+            <Button onAction="#HandleEditRequest">
+                <graphic>
+                    <ImageView fx:id="FX_ImageView_EditInfo" />
+                </graphic>
+
+                <tooltip>
+                    <Tooltip>
+                        <text>
+                            Edit Patient Data
+                        </text>
+                    </Tooltip>
+                </tooltip>
+            </Button>
+
+            <!-- Button for deleting information -->
+            <Button onAction="#HandleDeleteRequest">
+                <graphic>
+                    <ImageView fx:id="FX_ImageView_DeleteInfo" />
+                </graphic>
+
+                <tooltip>
+                    <Tooltip>
+                        <text>
+                            Delete Patient Data
+                        </text>
+                    </Tooltip>
+                </tooltip>
+            </Button>
+
+            <!-- Button for inserting information -->
+            <Button onAction="#HandleInsertColumnRequest">
+                <graphic>
+                    <ImageView fx:id="FX_ImageView_AddColumn" />
+                </graphic>
+
+                <tooltip>
+                    <Tooltip>
+                        <text>
+                            Insert New Table Column
+                        </text>
+                    </Tooltip>
+                </tooltip>
+            </Button>
+
+            <!-- Button for deleting information -->
+            <Button onAction="#HandleDeleteColumnRequest">
+                <graphic>
+                    <ImageView fx:id="FX_ImageView_DeleteColumn" />
+                </graphic>
+
+                <tooltip>
+                    <Tooltip>
+                        <text>
+                            Delete Table Column
+                        </text>
+                    </Tooltip>
+                </tooltip>
             </Button>
         </ToolBar>
     </top>

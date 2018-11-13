@@ -402,15 +402,18 @@ public class B_Database {
 
     /**
      * Method for getting information stored in the data base.
+     * @param ID the id of the patient whose information is to be received. IF null, all record data is fetched.
      * @return result stored in resultset if successful, null otherwise.
      */
-    public ResultSet GetInformation(){
-        query = "SELECT B.PATIENT_ID, B.PATIENT_NAME, B.AGE, B.SEX, B.ADDRESS, B.ADMISSION_DATE, ";
+    public ResultSet GetInformation(Integer ID){
+        query = "SELECT B.PATIENT_ID, B.PATIENT_NAME, B.AGE, B.SEX, B.ADDRESS, TO_CHAR(B.ADMISSION_DATE, 'YYYY/MM/DD') AS ADMISSION_DATE, ";
         for (int i = 0; i < ListOfColumns.size(); ++i) {
             query += "I." + ListOfColumns.get(i).ColumnName;
 
             if (i != ListOfColumns.size() - 1)
                 query += ", ";
+            else if (ID != null)
+                query += " FROM BASIC_INFO B, IN_DEPTH_INFO I WHERE B.PATIENT_ID = I.PATIENT_ID AND B.PATIENT_ID = " + ID.toString() + " ORDER BY B.PATIENT_ID ASC";
             else
                 query += " FROM BASIC_INFO B, IN_DEPTH_INFO I WHERE B.PATIENT_ID = I.PATIENT_ID ORDER BY B.PATIENT_ID ASC";
         }
