@@ -306,15 +306,55 @@ public class C_ViewInformation {
             String ID = FX_TableView.getSelectionModel().getSelectedItem().get(0);
 
             Optional<ButtonType> result = B_DrawWindows.getDialog().showAndWait();
-            if (result.isPresent() && result.equals(ButtonType.OK)){
+            if (result.isPresent() && result.get() == ButtonType.OK) {
                 Task<Boolean> Task_UpdateInformation = new Task<Boolean>() {
                     Boolean Status;
 
                     @Override
                     protected Boolean call() throws Exception {
-//                        Status = B_Database.B_database_instance.UpdateBasicInformation(ID, )
-
+                        Status = c_insertInformation.EditInformation(Integer.parseInt(ID));
+                        System.out.println(Status);
                         return Status;
+                    }
+
+                    @Override
+                    protected void succeeded() {
+                        if (Status) {
+                            B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                                    "Success",
+                                    "Edited successfully",
+                                    "Information successfully editted.",
+                                    "INFORMATION"
+                            );
+                            SetUpRecords(null);
+                        } else {
+                            B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                                    "Failed",
+                                    "Edit failed",
+                                    "Information could not be edited.",
+                                    "ERROR"
+                            );
+                        }
+                    }
+
+                    @Override
+                    protected void failed() {
+                        B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                                "Failed",
+                                "Edit failed",
+                                "Information could not be edited.",
+                                "ERROR"
+                        );
+                    }
+
+                    @Override
+                    protected void cancelled() {
+                        B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                                "Cancelled",
+                                "Edit cancelled",
+                                "Task was cancelled by user.",
+                                "INFORMATION"
+                        );
                     }
                 };
                 new Thread(Task_UpdateInformation).start();

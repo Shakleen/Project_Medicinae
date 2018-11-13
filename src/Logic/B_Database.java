@@ -375,28 +375,62 @@ public class B_Database {
      * @param Columns the column information to be updated.
      * @throws Defined_Exceptions when null or no column information has been given.
      */
-    public boolean UpdateBasicInformation(Integer ID, ArrayList<E_ColumnInfo> Columns) throws Defined_Exceptions{
+    public boolean UpdateInformation(Integer ID, ArrayList<E_ColumnInfo> Columns) throws Defined_Exceptions{
         // Check if columns is null
         if (Columns == null)          throw new Defined_Exceptions("NULL_COLUMN_ARRAY");
         // No column information given exception
         else if (Columns.size() == 0) throw new Defined_Exceptions("ZERO_COLUMNS_FOR_RECORD");
 
         query = "UPDATE BASIC_INFO SET ";
-        E_ColumnInfo column;
+        LoopThrough(Columns, 0, 5, ID);
 
+        if (HandleUpdateExecution()){
+            query = "UPDATE IN_DEPTH_INFO SET ";
+            LoopThrough(Columns, 5, Columns.size(), ID);
+            if(HandleUpdateExecution()){
+//                if (B_FileSystem.B_FileSystem_instance.SetUpFileReader("A.txt", WordSeparator)){
+//                    boolean found = false, NewLine = true;
+//                    String WantedName = Columns.get(0).ColumnValue, FoundName = "";
+//                    while(true){
+//                        if (NewLine == true){
+//                            FoundName = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+//                            if (FoundName == null) break;
+//                            B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+//
+//                            if (FoundName.equals(WantedName)){
+//                                found = true;
+//                            }
+//                        }
+//                    }
+                }
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Helper method for UpdateInformation
+     * @param ID the patient ID whose information is to be updated.
+     * @param Columns the column information to be updated.
+     * @param start the starting of the loop.
+     * @param finish the ending of the loop.
+     */
+    private void LoopThrough(ArrayList<E_ColumnInfo> Columns, int start, int finish, Integer ID){
+        E_ColumnInfo column;
         // Go through each column name and information and add it to the query statement.
-        for(int i = 0; i < Columns.size(); ++i){
+        for(int i = start; i < finish; ++i){
             column = Columns.get(i);
 
             // Column Name = Column Value
             query += column.ColumnName + " = " + AppendBasedOnType(column.ColumnValue, column.ColumnType);
 
-            // Based on the index one of the following will be appended at each index.
-            if (i < Columns.size()-1)       query += ", ";
-            else                            query += " WHERE PATIENT_ID = " + ID.toString();
+            if (i < finish-1)       query += ", ";
         }
 
-        return HandleUpdateExecution();
+        query += " WHERE PATIENT_ID = " + ID.toString();
     }
 
 

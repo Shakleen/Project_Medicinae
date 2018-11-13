@@ -122,7 +122,6 @@ public class C_InsertInformation {
         return B_Database.B_database_instance.InsertInformation(Basic, Indepth, true);
     }
 
-
     public void setFX_TextField_Name(String Name) {
         this.FX_TextField_Name.setText(Name);
     }
@@ -143,5 +142,37 @@ public class C_InsertInformation {
 
     public void setFX_DatePicker_Admission(String Admission) {
         this.FX_DatePicker_Admission.setValue(LocalDate.parse(Admission, DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+    }
+
+    public boolean EditInformation(Integer ID){
+        ArrayList<E_ColumnInfo> EditColumnInfo = new ArrayList<>();
+        String Name = FX_TextField_Name.getText().trim();
+        String Age = FX_ComboBox_Age.getSelectionModel().getSelectedItem();
+        String Sex = FX_ComboBox_Sex.getSelectionModel().getSelectedItem();
+        String Address = FX_TextField_Address.getText().trim();
+        String Date = B_Database.B_database_instance.df.format(FX_DatePicker_Admission.getValue());
+
+        EditColumnInfo.add(new E_ColumnInfo("PATIENT_NAME", Name, 1));
+        EditColumnInfo.add(new E_ColumnInfo("AGE", Age, 2));
+        EditColumnInfo.add(new E_ColumnInfo("SEX", Sex, 1));
+        EditColumnInfo.add(new E_ColumnInfo("ADDRESS", Address, 1));
+        EditColumnInfo.add(new E_ColumnInfo("ADMISSION_DATE", Date, 3));
+
+        E_ColumnInfo column;
+        String Value;
+        for(int i = 0; i < NodeArray.size(); ++i){
+            column = B_Database.ListOfColumns.get(i);
+            Value = NodeArray.get(i).getSelectionModel().getSelectedItem().toString();
+            System.out.println(column.ColumnName + " : " + Value);
+            EditColumnInfo.add(new E_ColumnInfo(column.ColumnName, Value, column.ColumnType));
+        }
+
+        try {
+            return B_Database.B_database_instance.UpdateInformation(ID, EditColumnInfo);
+        } catch (Defined_Exceptions e){
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }
