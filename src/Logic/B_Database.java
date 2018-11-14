@@ -19,6 +19,7 @@ public class B_Database {
     private String values;          // Used to store column values.
     private ResultSet resultSet;    // ResultSet type object to return database tables.
     private final String ColumnFileName = "ColumnNames.txt";        // Name of the file where column information is kept.
+    private final String RecordFileName = "A.txt";        // Name of the file where column information is kept.
     private final String WordSeparator = "#";
     private final String LineSeparator = "|";
     private final String Seperator = WordSeparator + LineSeparator + '\n' + WordSeparator;
@@ -303,7 +304,7 @@ public class B_Database {
 
                         Temp += LineSeparator + "\n" + WordSeparator;
 
-                        B_FileSystem.B_FileSystem_instance.WriteToFile(Temp, "A.txt", true);
+                        B_FileSystem.B_FileSystem_instance.WriteToFile(Temp, RecordFileName, true);
                     }
 
                     return true;
@@ -388,24 +389,73 @@ public class B_Database {
             query = "UPDATE IN_DEPTH_INFO SET ";
             LoopThrough(Columns, 5, Columns.size(), ID);
             if(HandleUpdateExecution()){
-//                if (B_FileSystem.B_FileSystem_instance.SetUpFileReader("A.txt", WordSeparator)){
-//                    boolean found = false, NewLine = true;
-//                    String WantedName = Columns.get(0).ColumnValue, FoundName = "";
-//                    while(true){
-//                        if (NewLine == true){
-//                            FoundName = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
-//                            if (FoundName == null) break;
-//                            B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
-//
-//                            if (FoundName.equals(WantedName)){
-//                                found = true;
-//                            }
-//                        }
-//                    }
-                }
-                return true;
+                return UpdateRecordFile(Columns);
             }
         }
+
+        return false;
+    }
+
+
+    public boolean UpdateRecordFile(ArrayList<E_ColumnInfo> Columns){
+        String Name = Columns.get(0).ColumnValue;
+
+        // Setup file reader and continue only if successful.
+        if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(RecordFileName, WordSeparator)) {
+            String TempFile = "Temp.txt", Fragment = null, TempLine = null;
+            Boolean Append = false;
+
+            while (true){
+                TempLine = "";
+                Fragment = null;
+
+                // Read line from record file.
+                while(true) {
+                    Fragment = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                    if (Fragment == null) break;
+                    B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+                    if (Fragment.contains(LineSeparator)){
+                        Fragment = LineSeparator + "\n" + WordSeparator;
+                        TempLine += Fragment;
+                        break;
+                    }
+                    TempLine += Fragment + "#";
+                }
+
+                if (Fragment == null)   break;
+                else if (TempLine.toLowerCase().contains(Name.toLowerCase())) continue;
+
+                Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine, TempFile, Append);
+            }
+
+            TempLine = "";
+            for (int i = 0; i < Columns.size(); ++i) {
+                E_ColumnInfo columnInfo = Columns.get(i);
+                TempLine += columnInfo.ColumnName + WordSeparator + columnInfo.ColumnValue + WordSeparator + columnInfo.ColumnType + WordSeparator;
+            }
+            TempLine += LineSeparator + "\n" + WordSeparator;
+            B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine, TempFile, true);
+
+            // Write temp back to main file.
+            if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(TempFile)) {
+                Append = false;
+                do {
+                    // Read from temp file.
+                    TempLine = B_FileSystem.B_FileSystem_instance.ReadFromFileNextLine();
+
+                    // If line read isn't null then write it back to column file.
+                    if (TempLine != null)
+                        if (TempLine.length() > 2)
+                            Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine + "\n", RecordFileName, Append);
+                        else
+                            Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine, RecordFileName, Append);
+                } while (TempLine != null);
+
+                B_FileSystem.B_FileSystem_instance.WriteToFile("\n", TempFile, false);
+
+                return true;
+            } else System.out.println("UpdateRecordFile - Failed to setup file reader for temp");
+        } else System.out.println("UpdateRecordFile - Failed to setup file reader for " + RecordFileName);
 
         return false;
     }
@@ -666,7 +716,7 @@ public class B_Database {
      */
     private boolean UpdateColumnList(String ColumnName){
         // Setup file reader and continue only if successful.
-        if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(ColumnFileName, ",")) {
+        if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(ColumnFileName, WordSeparator)) {
             String TempFile = "Temp.txt", Fragment = null, TempLine = null;
             Boolean Append = false;
 
@@ -679,12 +729,12 @@ public class B_Database {
                     Fragment = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
                     if (Fragment == null) break;
                     B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
-                    if (Fragment.contains("|")){
-                        Fragment = "|\n#";
+                    if (Fragment.contains(LineSeparator)){
+                        Fragment = LineSeparator + '\n' + WordSeparator;
                         TempLine += Fragment;
                         break;
                     }
-                    TempLine += Fragment + "#";
+                    TempLine += Fragment + WordSeparator;
                 }
 
                 if (Fragment == null)   break;
@@ -701,7 +751,7 @@ public class B_Database {
 
                     // If line read isn't null then write it back to column file.
                     if (TempLine != null)
-                        Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine, ColumnFileName, Append);
+                        Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine + "\n", ColumnFileName, Append);
                 } while (TempLine != null);
 
                 return true;
