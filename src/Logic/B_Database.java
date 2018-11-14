@@ -389,7 +389,7 @@ public class B_Database {
             query = "UPDATE IN_DEPTH_INFO SET ";
             LoopThrough(Columns, 5, Columns.size(), ID);
             if(HandleUpdateExecution()){
-                return UpdateRecordFile(Columns);
+                return UpdateRecordFile(Columns, true, Columns.get(0).ColumnValue);
             }
         }
 
@@ -397,9 +397,12 @@ public class B_Database {
     }
 
 
-    public boolean UpdateRecordFile(ArrayList<E_ColumnInfo> Columns){
-        String Name = Columns.get(0).ColumnValue;
-
+    /**
+     * Method for updating the record file after modification.
+     * @param Columns the column information to be updated.
+     * @return
+     */
+    public boolean UpdateRecordFile(ArrayList<E_ColumnInfo> Columns, boolean Type, String Name){
         // Setup file reader and continue only if successful.
         if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(RecordFileName, WordSeparator)) {
             String TempFile = "Temp.txt", Fragment = null, TempLine = null;
@@ -429,12 +432,14 @@ public class B_Database {
             }
 
             TempLine = "";
-            for (int i = 0; i < Columns.size(); ++i) {
-                E_ColumnInfo columnInfo = Columns.get(i);
-                TempLine += columnInfo.ColumnName + WordSeparator + columnInfo.ColumnValue + WordSeparator + columnInfo.ColumnType + WordSeparator;
+            if (Type) {
+                for (int i = 0; i < Columns.size(); ++i) {
+                    E_ColumnInfo columnInfo = Columns.get(i);
+                    TempLine += columnInfo.ColumnName + WordSeparator + columnInfo.ColumnValue + WordSeparator + columnInfo.ColumnType + WordSeparator;
+                }
+                TempLine += LineSeparator + "\n" + WordSeparator;
+                B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine, TempFile, true);
             }
-            TempLine += LineSeparator + "\n" + WordSeparator;
-            B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine, TempFile, true);
 
             // Write temp back to main file.
             if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(TempFile)) {
@@ -481,6 +486,24 @@ public class B_Database {
         }
 
         query += " WHERE PATIENT_ID = " + ID.toString();
+    }
+
+
+    /**
+     * Method for deleting records from database.
+     * @param ID the id of the record to be deleted.
+     * @param Name the name of the record holder to be deleted.
+     * @return true if successful. False otherwise.
+     */
+    public boolean DeleteRecordData(Integer ID, String Name){
+        query = "DELETE FROM IN_DEPTH_INFO WHERE PATIENT_ID = " + ID.toString();
+        if (HandleUpdateExecution()){
+            query = "DELETE FROM BASIC_INFO WHERE PATIENT_ID = " + ID.toString();
+            if (HandleUpdateExecution()) {
+                return UpdateRecordFile(null, false, Name);
+            }
+        }
+        return false;
     }
 
 

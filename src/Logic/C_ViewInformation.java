@@ -1,14 +1,11 @@
 package Logic;
 
-import javafx.beans.Observable;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -17,7 +14,6 @@ import javafx.scene.layout.BorderPane;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Optional;
 
 public class C_ViewInformation {
@@ -363,7 +359,72 @@ public class C_ViewInformation {
     }
 
 
-    @FXML private void HandleDeleteRequest(){}
+    @FXML private void HandleDeleteRequest(){
+        B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                "Confirmation",
+                "Confirm delete operation",
+                "Do you want to delete record?",
+                "CONFIRMATION"
+        );
+
+        if (B_DrawWindows.getAlertResult().isPresent() && B_DrawWindows.getAlertResult().get() == ButtonType.OK){
+            String ID = FX_TableView.getSelectionModel().getSelectedItem().get(0);
+            String Name = FX_TableView.getSelectionModel().getSelectedItem().get(1);
+
+            Task<Boolean> Task_DeleteRecord = new Task<Boolean>() {
+                Boolean Status;
+
+                @Override
+                protected Boolean call() throws Exception {
+                    Status = B_Database.B_database_instance.DeleteRecordData(Integer.parseInt(ID), Name);
+
+                    return Status;
+                }
+
+                @Override
+                protected void succeeded() {
+                    if (Status) {
+                        B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                                "Status",
+                                "Deleted successfully",
+                                "Information successfully Deleted.",
+                                "INFORMATION"
+                        );
+                        SetUpRecords(null);
+                    } else {
+                        B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                                "Failed",
+                                "Delete failed",
+                                "Information could not be Deleted.",
+                                "ERROR"
+                        );
+                    }
+                }
+
+                @Override
+                protected void failed() {
+                    B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                            "Failed",
+                            "Delete failed",
+                            "Information could not be Deleted.",
+                            "ERROR"
+                    );
+                }
+
+                @Override
+                protected void cancelled() {
+                    B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                            "Cancelled",
+                            "Delete cancelled",
+                            "Task was cancelled by user.",
+                            "INFORMATION"
+                    );
+                }
+            };
+
+            new Thread(Task_DeleteRecord).start();
+        }
+    }
 
 
     @FXML private void HandleInsertColumnRequest(){}
