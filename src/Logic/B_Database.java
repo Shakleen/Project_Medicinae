@@ -610,7 +610,7 @@ public class B_Database {
         // This is to write the column information back to the file
         if (ExecuteStatement(query, 0)) {
             if (WriteCondition) {
-                if(B_FileSystem.B_FileSystem_instance.WriteToFile(ColumnName + "," + ColumnType + Seperator, ColumnFileName, true))
+                if(B_FileSystem.B_FileSystem_instance.WriteToFile(ColumnName + WordSeparator + ColumnType + Seperator, ColumnFileName, true))
                     return true;
                 else System.out.println("AddColumn - Writing to file failed!");
             } else return true;
@@ -643,7 +643,7 @@ public class B_Database {
             // This is to write the column information back to the file
             if (ExecuteStatement(query, 0))
                 if (WriteCondition)
-                    return B_FileSystem.B_FileSystem_instance.WriteToFile(ColumnName + "," + ColumnType + "," + LowerBound + "," + UpperBound + Seperator, ColumnFileName, true);
+                    return B_FileSystem.B_FileSystem_instance.WriteToFile(ColumnName + WordSeparator + ColumnType + WordSeparator + LowerBound + WordSeparator + UpperBound + Seperator, ColumnFileName, true);
                 return true;
         }
 
@@ -676,7 +676,7 @@ public class B_Database {
             query = "ALTER TABLE IN_DEPTH_INFO ADD CONSTRAINT CHK_IND_" + ColumnName + " CHECK (" + ColumnName + " IN (";
             for (int i = 0; i < DomainValues.size(); ++i) {
                 query += "'" + DomainValues.get(i) + "'";
-                domain += "," + DomainValues.get(i);
+                domain += WordSeparator + DomainValues.get(i);
 
                 if (i != DomainValues.size() - 1) query += ", ";
                 else query += "))";
@@ -685,7 +685,7 @@ public class B_Database {
             // This is to write the column information back to the file
             if (ExecuteStatement(query, 0))
                 if (WriteCondition){
-                    if (B_FileSystem.B_FileSystem_instance.WriteToFile(ColumnName + "," + ColumnType + "," + ColumnSize + domain  + Seperator, ColumnFileName, true))
+                    if (B_FileSystem.B_FileSystem_instance.WriteToFile(ColumnName + WordSeparator + ColumnType + WordSeparator + ColumnSize + domain  + Seperator, ColumnFileName, true))
                         return true;
                     else System.out.println("AddColumnWithCheck - Failed to write to file!");
                 } else return true;

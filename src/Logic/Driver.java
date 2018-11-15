@@ -21,13 +21,13 @@ public class Driver extends Application {
     }
 
     public static void main(String[] args) {
-//        try{
-//            B_Database.B_database_instance.UpdateDatabase();
-//        } catch (Defined_Exceptions de){
-//            System.out.println("Failed because of " + de.ExceptionName);
-//        }
+        try{
+            B_Database.B_database_instance.UpdateDatabase();
+        } catch (Defined_Exceptions de){
+            System.out.println("Failed because of " + de.ExceptionName);
+        }
 //        System.out.println(B_Database.B_database_instance.GetTotalColumnNumber());
-        Print();
+//        Print();
         launch(args);
     }
 

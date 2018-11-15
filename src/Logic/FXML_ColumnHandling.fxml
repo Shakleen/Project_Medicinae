@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Logic.C_ColumnHandling"
+            prefHeight="400.0" prefWidth="600.0">
+    <content>
+        <VBox>
+            <Label text="Column Name (No Spaces. Use Underscore instead)">
+                <VBox.margin>
+                    <Insets top="15" bottom="15"/>
+                </VBox.margin>
+            </Label>
+            <TextField fx:id="FX_TextField_ColumnName"/>
+
+            <Label text="Type of data to be held column">
+                <VBox.margin>
+                    <Insets top="15" bottom="15"/>
+                </VBox.margin>
+            </Label>
+            <ComboBox fx:id="FX_ComboBox_Type">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="String"/>
+                        <String fx:value="Number"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <Label text="Max size of string">
+                <VBox.margin>
+                    <Insets top="15" bottom="15"/>
+                </VBox.margin>
+            </Label>
+            <HBox>
+                <Slider fx:id="FX_Slider_ColumnSize" min="10" max="500"/>
+                <Label fx:id="FX_Label_SliderValue"/>
+            </HBox>
+
+            <Label text="Constraints of column (Discrete values only attainable by the column)">
+                <VBox.margin>
+                    <Insets top="15" bottom="15"/>
+                </VBox.margin>
+            </Label>
+            <HBox>
+                <ListView fx:id="FX_ListView_TextFields" maxWidth="250" maxHeight="250" minWidth="100" minHeight="100"/>
+                <ListView fx:id="FX_ListView_Buttons" maxWidth="40" maxHeight="250"  minWidth="40" minHeight="100"/>
+
+                <VBox>
+                    <Label text="Upper Limit ">
+                        <VBox.margin>
+                            <Insets left="25"/>
+                        </VBox.margin>
+                    </Label>
+                    <TextField fx:id="FX_TextField_UpperLimit">
+                        <VBox.margin>
+                            <Insets left="25"/>
+                        </VBox.margin>
+                    </TextField>
+
+                    <Label text="Lower Limit ">
+                        <VBox.margin>
+                            <Insets left="25"/>
+                        </VBox.margin>
+                    </Label>
+                    <TextField fx:id="FX_TextField_LowerLimit">
+                        <VBox.margin>
+                            <Insets left="25"/>
+                        </VBox.margin>
+                    </TextField>
+                </VBox>
+            </HBox>
+            <Button fx:id="FX_Button_AddNew" text="Add New" onAction="#HandleAddNewConstraint"/>
+        </VBox>
+    </content>
+</DialogPane>

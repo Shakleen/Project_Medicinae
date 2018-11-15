@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class C_InsertInformation {
+public class C_RecordHandling {
     ArrayList<ComboBox> NodeArray;
 
     @FXML private GridPane FX_GridPane;

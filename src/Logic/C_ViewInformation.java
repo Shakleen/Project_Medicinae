@@ -86,14 +86,7 @@ public class C_ViewInformation {
         FX_TableView.getColumns().addAll(IDColumn, NameColumn, AgeColumn, SexColumn, ADateColumn);
 
         for(int i = 0; i < B_Database.ListOfColumns.size(); ++i){
-            E_ColumnInfo columnInfo = B_Database.ListOfColumns.get(i);
-            final int finalIdx = i + 5;
-            TableColumn<ObservableList<String>, String> tableColumn = new TableColumn(columnInfo.ColumnName);
-            tableColumn.setPrefWidth(columnInfo.ColumnName.length() * 10);
-            tableColumn.setCellValueFactory(param ->
-                    new ReadOnlyObjectWrapper<>(param.getValue().get(finalIdx))
-            );
-            FX_TableView.getColumns().add(tableColumn);
+            AddColumn(i);
         }
 
         FX_TableView.setTableMenuButtonVisible(true);
@@ -104,6 +97,22 @@ public class C_ViewInformation {
                 GetContactInformation();
             }
         });
+    }
+
+
+    /**
+     * Method to add column to the table
+     * @param i
+     */
+    private void AddColumn(int i){
+        E_ColumnInfo columnInfo = B_Database.ListOfColumns.get(i);
+        final int finalIdx = i + 5;
+        TableColumn<ObservableList<String>, String> tableColumn = new TableColumn(columnInfo.ColumnName);
+        tableColumn.setPrefWidth(columnInfo.ColumnName.length() * 10);
+        tableColumn.setCellValueFactory(param ->
+                new ReadOnlyObjectWrapper<>(param.getValue().get(finalIdx))
+        );
+        FX_TableView.getColumns().add(tableColumn);
     }
 
 
@@ -217,7 +226,7 @@ public class C_ViewInformation {
      */
     @FXML private void HandleInsertRequest(){
         boolean con = B_DrawWindows.B_DrawWindows_instance.DrawDialog(
-                "FXML_InsertInformation.fxml",
+                "FXML_RecordHandling.fxml",
                 "Insert new record",
                 "Fill up the form with appropriate information",
                 FX_BorderPane
@@ -225,7 +234,7 @@ public class C_ViewInformation {
 
         if (con) {
             System.out.println("New stage drawn");
-            C_InsertInformation c_insertInformation = B_DrawWindows.getFxmlLoader().getController();
+            C_RecordHandling c_recordHandling = B_DrawWindows.getFxmlLoader().getController();
             Optional<ButtonType> result = B_DrawWindows.getDialog().showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 Task<Boolean> Task_HandleInsert = new Task<Boolean>() {
@@ -233,7 +242,7 @@ public class C_ViewInformation {
 
                     @Override
                     protected Boolean call() throws Exception {
-                        status = c_insertInformation.InsertInformation();
+                        status = c_recordHandling.InsertInformation();
                         return status;
                     }
 
@@ -285,7 +294,7 @@ public class C_ViewInformation {
 
     @FXML private void HandleEditRequest(){
         boolean con = B_DrawWindows.B_DrawWindows_instance.DrawDialog(
-                "FXML_InsertInformation.fxml",
+                "FXML_RecordHandling.fxml",
                 "Edit record data",
                 "Fill up the form with new information",
                 FX_BorderPane
@@ -293,12 +302,12 @@ public class C_ViewInformation {
 
         if (con) {
             System.out.println("New stage drawn");
-            C_InsertInformation c_insertInformation = B_DrawWindows.getFxmlLoader().getController();
-            c_insertInformation.setFX_TextField_Name(FX_TableView.getSelectionModel().getSelectedItem().get(1));
-            c_insertInformation.setFX_ComboBox_Age(FX_TableView.getSelectionModel().getSelectedItem().get(2));
-            c_insertInformation.setFX_ComboBox_Sex(FX_TableView.getSelectionModel().getSelectedItem().get(3));
-            c_insertInformation.setFX_TextField_Address(FX_Label_Address.getText());
-            c_insertInformation.setFX_DatePicker_Admission(FX_TableView.getSelectionModel().getSelectedItem().get(4));
+            C_RecordHandling c_recordHandling = B_DrawWindows.getFxmlLoader().getController();
+            c_recordHandling.setFX_TextField_Name(FX_TableView.getSelectionModel().getSelectedItem().get(1));
+            c_recordHandling.setFX_ComboBox_Age(FX_TableView.getSelectionModel().getSelectedItem().get(2));
+            c_recordHandling.setFX_ComboBox_Sex(FX_TableView.getSelectionModel().getSelectedItem().get(3));
+            c_recordHandling.setFX_TextField_Address(FX_Label_Address.getText());
+            c_recordHandling.setFX_DatePicker_Admission(FX_TableView.getSelectionModel().getSelectedItem().get(4));
             String ID = FX_TableView.getSelectionModel().getSelectedItem().get(0);
 
             Optional<ButtonType> result = B_DrawWindows.getDialog().showAndWait();
@@ -308,7 +317,7 @@ public class C_ViewInformation {
 
                     @Override
                     protected Boolean call() throws Exception {
-                        Status = c_insertInformation.EditInformation(Integer.parseInt(ID));
+                        Status = c_recordHandling.EditInformation(Integer.parseInt(ID));
                         System.out.println(Status);
                         return Status;
                     }
@@ -427,7 +436,65 @@ public class C_ViewInformation {
     }
 
 
-    @FXML private void HandleInsertColumnRequest(){}
+    @FXML private void HandleInsertColumnRequest(){
+        boolean con = B_DrawWindows.B_DrawWindows_instance.DrawDialog(
+                "FXML_ColumnHandling.fxml",
+                "Insert new column",
+                "Please fill up the form to create new column",
+                FX_BorderPane
+        );
+
+        if (con){
+            C_ColumnHandling c_columnHandling = B_DrawWindows.getFxmlLoader().getController();
+
+            Optional<ButtonType> result = B_DrawWindows.getDialog().showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK){
+                Task<E_ColumnInfo> Task_AddColumn = new Task<E_ColumnInfo>() {
+                    E_ColumnInfo e_columnInfo;
+
+                    @Override
+                    protected E_ColumnInfo call() throws Exception {
+                        e_columnInfo = c_columnHandling.ProcessColumnAdd();
+                        return e_columnInfo;
+                    }
+
+                    @Override
+                    protected void succeeded() {
+                        if (e_columnInfo != null){
+                            B_Database.ListOfColumns.add(e_columnInfo);
+
+                            AddColumn(B_Database.ListOfColumns.size()-1);
+
+                            B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                                    "Addition successful!",
+                                    "Added new column successfully",
+                                    "New column was added.",
+                                    "INFORMATION"
+                            );
+                        } else {
+                            B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                                    "Addition failed",
+                                    "Addition failed",
+                                    "Column could not be added.",
+                                    "ERROR"
+                            );
+                        }
+                    }
+
+                    @Override
+                    protected void failed() {
+                        B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                                "Addition failed",
+                                "Addition failed",
+                                "Column could not be added.",
+                                "ERROR"
+                        );
+                    }
+                };
+                new Thread(Task_AddColumn).start();
+            }
+        }
+    }
 
 
     @FXML private void HandleDeleteColumnRequest(){}
