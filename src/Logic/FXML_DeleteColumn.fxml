@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Logic.C_DeleteColumn"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <content>
+        <HBox>
+            <ListView fx:id="FX_ListView_AvailableColumns"/>
+
+            <VBox>
+                <Button fx:id="FX_Button_MoveToDeleteSingle"/>
+                <Button fx:id="FX_Button_MoveToDeleteAll"/>
+                <Button fx:id="FX_Button_MoveToAvailableSingle"/>
+                <Button fx:id="FX_Button_MoveToAvailableAll"/>
+            </VBox>
+
+            <ListView fx:id="FX_ListView_DeleteColumns"/>
+        </HBox>
+    </content>
+
+</DialogPane>

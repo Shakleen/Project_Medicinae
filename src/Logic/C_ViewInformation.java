@@ -438,14 +438,14 @@ public class C_ViewInformation {
 
     @FXML private void HandleInsertColumnRequest(){
         boolean con = B_DrawWindows.B_DrawWindows_instance.DrawDialog(
-                "FXML_ColumnHandling.fxml",
+                "FXML_InsertColumn.fxml",
                 "Insert new column",
                 "Please fill up the form to create new column",
                 FX_BorderPane
         );
 
         if (con){
-            C_ColumnHandling c_columnHandling = B_DrawWindows.getFxmlLoader().getController();
+            C_InsertColumn c_Insert_column = B_DrawWindows.getFxmlLoader().getController();
 
             Optional<ButtonType> result = B_DrawWindows.getDialog().showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK){
@@ -454,7 +454,7 @@ public class C_ViewInformation {
 
                     @Override
                     protected E_ColumnInfo call() throws Exception {
-                        e_columnInfo = c_columnHandling.ProcessColumnAdd();
+                        e_columnInfo = c_Insert_column.ProcessColumnAdd();
                         return e_columnInfo;
                     }
 
@@ -462,8 +462,10 @@ public class C_ViewInformation {
                     protected void succeeded() {
                         if (e_columnInfo != null){
                             B_Database.ListOfColumns.add(e_columnInfo);
-
-                            AddColumn(B_Database.ListOfColumns.size()-1);
+                            FX_TableView.getItems().clear();
+                            FX_TableView.getColumns().clear();
+                            SetUpTableColumns();
+                            SetUpRecords(null);
 
                             B_DrawWindows.B_DrawWindows_instance.DrawAlert(
                                     "Addition successful!",
@@ -497,5 +499,64 @@ public class C_ViewInformation {
     }
 
 
-    @FXML private void HandleDeleteColumnRequest(){}
+    @FXML private void HandleDeleteColumnRequest(){
+        boolean con = B_DrawWindows.B_DrawWindows_instance.DrawDialog(
+                "FXML_DeleteColumn.fxml",
+                "Insert new column",
+                "Please fill up the form to create new column",
+                FX_BorderPane
+        );
+
+        if (con) {
+            C_DeleteColumn c_Delete_column = B_DrawWindows.getFxmlLoader().getController();
+
+            Optional<ButtonType> result = B_DrawWindows.getDialog().showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                Task<Boolean> Task_DeleteColumns = new Task<Boolean>() {
+                    Boolean Status = false;
+
+                    @Override
+                    protected Boolean call() throws Exception {
+                        Status = c_Delete_column.DeleteColumns();
+                        return Status;
+                    }
+
+                    @Override
+                    protected void succeeded() {
+                        if (Status){
+                            B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                                    "Deletion successful!",
+                                    "Columns deleted successfully",
+                                    "Columns were deleted with success.",
+                                    "INFORMATION"
+                            );
+                            B_Database.B_database_instance.GetColumnInfoFromFile();
+                            FX_TableView.getItems().clear();
+                            FX_TableView.getColumns().clear();
+                            SetUpTableColumns();
+                            SetUpRecords(null);
+                        } else {
+                            B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                                    "Deletion failed",
+                                    "Deletion failed",
+                                    "Column could not be Deletion.",
+                                    "ERROR"
+                            );
+                        }
+                    }
+
+                    @Override
+                    protected void failed() {
+                        B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                                "Deletion failed",
+                                "Deletion failed",
+                                "Column could not be Deletion.",
+                                "ERROR"
+                        );
+                    }
+                };
+                new Thread(Task_DeleteColumns).start();
+            }
+        }
+    }
 }

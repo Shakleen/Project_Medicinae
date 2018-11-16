@@ -45,13 +45,35 @@ public class B_Database {
             connection = DriverManager.getConnection(dbURL, name, password);
             if(connection != null){
                 statement = connection.createStatement();
-                ListOfColumns = new ArrayList<>();
-                GetColumnInfoFromFile();
+                SetupDatabaseForUsage();
             }
         }
-        catch (ClassNotFoundException | SQLException | Defined_Exceptions ex){
+        catch (ClassNotFoundException | SQLException ex){
             ex.printStackTrace();
         }
+    }
+
+
+    /**
+     * Method for checking and setting up the database.
+     * @return true if successful. false otherwise.
+     */
+    private boolean SetupDatabaseForUsage(){
+        try{
+            boolean BASIC_INFO = false, IN_DEPTH_INFO = false;
+            ResultSet rs = statement.executeQuery("SELECT TABLE_NAME FROM USER_TABLES WHERE TABLE_NAME LIKE 'BASIC_INFO'");
+            BASIC_INFO = rs.next();
+            rs = statement.executeQuery("SELECT TABLE_NAME FROM USER_TABLES WHERE TABLE_NAME LIKE 'IN_DEPTH_INFO'");
+            IN_DEPTH_INFO = rs.next();
+
+            ListOfColumns = new ArrayList<>();
+            GetColumnInfoFromFile();
+
+            if (BASIC_INFO == false && IN_DEPTH_INFO == false)  BASIC_INFO = IN_DEPTH_INFO = UpdateDatabase();
+        } catch (Defined_Exceptions | SQLException de){
+
+        }
+        return false;
     }
 
 
@@ -109,9 +131,8 @@ public class B_Database {
     /**
      * Method for retrieving column related information from file and storing them into a list.
      * @return true if successful, false otherwise.
-     * @throws Defined_Exceptions
      */
-    private boolean GetColumnInfoFromFile()  throws Defined_Exceptions{
+    public boolean GetColumnInfoFromFile(){
         String ColumnName = null, LineRead = null, temp = null;
         Integer ColumnType = null, ColumnSize = null;
         ArrayList<String> DomainValues = null;
@@ -119,6 +140,8 @@ public class B_Database {
 
         // Open column file for reading.
         if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(ColumnFileName, "#")) {
+            ListOfColumns.clear();
+
             while (true) {
                 // Getting name
                 ColumnName = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
@@ -774,7 +797,10 @@ public class B_Database {
 
                     // If line read isn't null then write it back to column file.
                     if (TempLine != null)
-                        Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine + "\n", ColumnFileName, Append);
+                        if (TempLine.length() > 2)
+                            Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine + "\n", ColumnFileName, Append);
+                        else
+                            Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine, ColumnFileName, Append);
                 } while (TempLine != null);
 
                 return true;

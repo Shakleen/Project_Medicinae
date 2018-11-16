@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 
 import java.util.ArrayList;
 
-public class C_ColumnHandling {
+public class C_InsertColumn {
     @FXML private ComboBox<String> FX_ComboBox_Type;
     @FXML private TextField FX_TextField_ColumnName;
     @FXML private TextField FX_TextField_UpperLimit;
@@ -60,6 +60,7 @@ public class C_ColumnHandling {
             }
         });
     }
+
 
     @FXML private void HandleAddNewConstraint(){
         TextField textField = new TextField();

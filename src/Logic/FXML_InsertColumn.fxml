@@ -6,7 +6,7 @@
 <?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 
-<DialogPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Logic.C_ColumnHandling"
+<DialogPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Logic.C_InsertColumn"
             prefHeight="400.0" prefWidth="600.0">
     <content>
         <VBox>

@@ -12,6 +12,7 @@ public class E_ColumnInfo {
     public Integer UpperLimit;
     public Integer LowerLimit;
 
+
     public E_ColumnInfo(String columnName, String columnValue, Integer columnType) {
         ColumnName = columnName;
         ColumnValue = columnValue;
