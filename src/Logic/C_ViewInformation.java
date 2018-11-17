@@ -59,6 +59,7 @@ public class C_ViewInformation {
         SetUpRecords(null);
     }
 
+
     /**
      * Method for setting up the table columns
      */

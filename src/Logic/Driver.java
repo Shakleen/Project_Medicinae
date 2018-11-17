@@ -22,7 +22,6 @@ public class Driver extends Application {
 
     public static void main(String[] args) {
         System.out.println(B_Database.B_database_instance.GetTotalColumnNumber());
-//        Print();
         launch(args);
     }
 

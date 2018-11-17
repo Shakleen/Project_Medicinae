@@ -20,11 +20,13 @@ public class C_RecordHandling {
     ArrayList<ComboBox> NodeArray;
 
     @FXML private GridPane FX_GridPane;
+    @FXML private ScrollPane FX_ScrollablePane;
     @FXML private TextField FX_TextField_Name;
     @FXML private TextField FX_TextField_Address;
     @FXML private ComboBox<String> FX_ComboBox_Age;
     @FXML private ComboBox<String> FX_ComboBox_Sex;
     @FXML private DatePicker FX_DatePicker_Admission;
+    @FXML private ListView<TextField> FX_ListView_PhoneNo;
 
 
     private final int X = 200;
@@ -95,7 +97,7 @@ public class C_RecordHandling {
         String Age = FX_ComboBox_Age.getSelectionModel().getSelectedItem();
         String Sex = FX_ComboBox_Sex.getSelectionModel().getSelectedItem();
         String Address = FX_TextField_Address.getText().trim();
-        String Date = B_Database.B_database_instance.df.format(FX_DatePicker_Admission.getValue());
+        String Date = B_Database.B_database_instance.dateTimeFormatter.format(FX_DatePicker_Admission.getValue());
 
         ArrayList<E_ColumnInfo> Basic = new ArrayList<>(), Indepth = new ArrayList<>();
         Basic.add(new E_ColumnInfo("PATIENT_NAME", Name, 1));
@@ -119,7 +121,22 @@ public class C_RecordHandling {
             Indepth.add(new E_ColumnInfo(column.ColumnName, Value, column.ColumnType));
         }
 
-        return B_Database.B_database_instance.InsertInformation(Basic, Indepth, true);
+        if(B_Database.B_database_instance.InsertInformation(Basic, Indepth, true)){
+            ArrayList<String> PhoneNumbers = new ArrayList<>();
+
+            for(int i = 0; i < FX_ListView_PhoneNo.getItems().size(); ++i){
+                String PhoneNumber = FX_ListView_PhoneNo.getItems().get(i).getText().trim();
+                if (PhoneNumber.length() > 0) PhoneNumbers.add(PhoneNumber);
+            }
+
+            if (PhoneNumbers.size() > 0){
+                B_Database.B_database_instance.InsertPhoneNumbers(Basic, PhoneNumbers, true);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     public void setFX_TextField_Name(String Name) {
@@ -150,7 +167,7 @@ public class C_RecordHandling {
         String Age = FX_ComboBox_Age.getSelectionModel().getSelectedItem();
         String Sex = FX_ComboBox_Sex.getSelectionModel().getSelectedItem();
         String Address = FX_TextField_Address.getText().trim();
-        String Date = B_Database.B_database_instance.df.format(FX_DatePicker_Admission.getValue());
+        String Date = B_Database.B_database_instance.dateTimeFormatter.format(FX_DatePicker_Admission.getValue());
 
         EditColumnInfo.add(new E_ColumnInfo("PATIENT_NAME", Name, 1));
         EditColumnInfo.add(new E_ColumnInfo("AGE", Age, 2));
@@ -174,5 +191,9 @@ public class C_RecordHandling {
         }
 
         return false;
+    }
+
+    @FXML private void HandleAddNewPhoneNumber(){
+        FX_ListView_PhoneNo.getItems().add(new TextField());
     }
 }

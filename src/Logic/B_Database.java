@@ -1,5 +1,7 @@
 package Logic;
 
+import javafx.scene.shape.LineTo;
+
 import java.sql.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -20,11 +22,12 @@ public class B_Database {
     private ResultSet resultSet;    // ResultSet type object to return database tables.
     private final String ColumnFileName = "ColumnNames.txt";        // Name of the file where column information is kept.
     private final String RecordFileName = "A.txt";        // Name of the file where column information is kept.
+    private final String ContactFileName = "AC.txt";        // Name of the file where column information is kept.
     private final String WordSeparator = "#";
     private final String LineSeparator = "|";
     private final String Seperator = WordSeparator + LineSeparator + '\n' + WordSeparator;
-    private final String PhoneNoTable = "PATIENT_PHONE_NUMBERS";    // Name of the in phone no info table in sql
-    public DateTimeFormatter df;   // Date time formatter.
+    public final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+    private final String DateFormat = "YYYY/MM/DD";
     public static ArrayList<E_ColumnInfo> ListOfColumns;
 
     // This is a static instance of the class. It will be the only object that will handle the communication with the database.
@@ -38,7 +41,6 @@ public class B_Database {
      */
     private B_Database (String name, String password){
         connection = null;
-        df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         try{
             Class.forName("oracle.jdbc.OracleDriver");
             String dbURL = "jdbc:oracle:thin:@localhost:1521:xe";
@@ -92,7 +94,8 @@ public class B_Database {
             // Add the columns from column name file.
             if (SetupTableColumnsFromFile()) {
                 // Run record related sql statements from file
-                if (UpdateRecords())  return true;
+                if (UpdateRecords())
+                    return GetPhoneNumbersFromFile();
                 System.out.println("UpdateDatabase - Couldn't add records to table!");
             } else System.out.println("UpdateDatabase - Couldn't create columns!");
         } else System.out.println("UpdateDatabase - Couldn't execute table creation statements!");
@@ -256,7 +259,7 @@ public class B_Database {
      * @return true if successful, false otherwise.
      */
     private boolean UpdateRecords(){
-        if (B_FileSystem.B_FileSystem_instance.SetUpFileReader("A.txt", WordSeparator)){
+        if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(RecordFileName, WordSeparator)){
                 String Name = null, Value = null;
                 Integer Type = null;
                 Boolean Break = false;
@@ -373,23 +376,173 @@ public class B_Database {
      * @throws Defined_Exceptions when null array or zero phone numbers have been given.
      * @return true if addition is successful. False otherwise.
      */
-    public boolean InsertPhoneNumbers(Integer ID, ArrayList<String> PhoneNumbers) throws Defined_Exceptions{
+    public boolean InsertPhoneNumbers(Integer ID, ArrayList<String> PhoneNumbers, boolean WriteCondition) throws Defined_Exceptions{
         // Check if null
         if (PhoneNumbers == null)               throw new Defined_Exceptions("NULL_COLUMN_ARRAY");
         // Check if zero elements
         else if (PhoneNumbers.size() == 0)      throw new Defined_Exceptions("ZERO_COLUMNS_FOR_RECORD");
 
         boolean con = false;
-        for(int i = 0; i < PhoneNumbers.size(); ++i) {
+        String LineToWrite = "";
+        for (int i = 0; i < PhoneNumbers.size(); ++i) {
             query = "INSERT INTO PATIENT_PHONE_NUMBERS (PATIENT_ID, PHONE_NUMBER) VALUES" +
                     "(" +
-                        ID.toString() + ", " +
-                        "'" + PhoneNumbers.get(i) + "'" +
+                    ID.toString() + ", " +
+                    "'" + PhoneNumbers.get(i) + "'" +
                     ")";
             con = HandleUpdateExecution();
+
+            LineToWrite += PhoneNumbers.get(i);
+
+            if (i != PhoneNumbers.size() - 1)   LineToWrite += WordSeparator;
+            else                                LineToWrite += WordSeparator + LineSeparator + '\n' + WordSeparator;
         }
 
+        if (con && WriteCondition) {
+            con = WritePhoneNumbersToFile(ID, LineToWrite);
+        }
         return con;
+    }
+
+
+    /**
+     * Method for inserting patient phone numbers.
+     * @param PhoneNumbers the list of phone numbers to be added.
+     * @throws Defined_Exceptions when null array or zero phone numbers have been given.
+     * @return true if addition is successful. False otherwise.
+     */
+    public boolean InsertPhoneNumbers(ArrayList<E_ColumnInfo> Basic_Info, ArrayList<String> PhoneNumbers, boolean WriteCondition){
+        String Name = Basic_Info.get(0).ColumnValue;
+        String Age = Basic_Info.get(1).ColumnValue;
+        String Sex = Basic_Info.get(2).ColumnValue;
+        String Address = Basic_Info.get(3).ColumnValue;
+        String AdmissionDate = Basic_Info.get(4).ColumnValue;
+        Integer ID = 0;
+
+        try{
+            query = "SELECT PATIENT_ID FROM BASIC_INFO " +
+                    "WHERE PATIENT_NAME = '" + Name + "' AND " +
+                    "AGE = " + Age + " AND " +
+                    "SEX = '" + Sex + "' AND " +
+                    "ADDRESS = '" + Address + "' AND " +
+                    "ADMISSION_DATE = TO_DATE('" + AdmissionDate + "', '" + DateFormat + "')";
+            ResultSet rs = statement.executeQuery(query);
+            if (rs.next()){
+                ID = rs.getInt("PATIENT_ID");
+
+                if (ID >= 1){
+                    return InsertPhoneNumbers(ID, PhoneNumbers, WriteCondition);
+                }
+            }
+        } catch (SQLException | Defined_Exceptions e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Method for writing phone numbers to files.
+     * Should be called only after database has been populated with records.
+     */
+    private boolean WritePhoneNumbersToFile(Integer ID, String PhoneNumbers){
+        try {
+            query = "SELECT PATIENT_NAME, AGE, SEX, ADDRESS, TO_CHAR(ADMISSION_DATE, '" + DateFormat + "') AS ADMISSION_DATE FROM BASIC_INFO WHERE PATIENT_ID = " + ID.toString();
+            ResultSet rs = statement.executeQuery(query);
+            String LineToWrite = "";
+
+            if (rs.next()) {
+                // PATIENT_NAME, AGE, SEX, ADDRESS, ADMISSION_DATE
+                String Name = rs.getString("PATIENT_NAME");
+                String Age = rs.getString("AGE");
+                String Sex = rs.getString("SEX");
+                String Address = rs.getString("ADDRESS");
+                String AdmissionDate = rs.getString("ADMISSION_DATE");
+
+                LineToWrite += Name + WordSeparator;
+                LineToWrite += Age + WordSeparator;
+                LineToWrite += Sex + WordSeparator;
+                LineToWrite += Address + WordSeparator;
+                LineToWrite += AdmissionDate + WordSeparator;
+                LineToWrite += PhoneNumbers;
+
+                return B_FileSystem.B_FileSystem_instance.WriteToFile(LineToWrite, ContactFileName, true);
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Method for extracting phone numbers from files for patients.
+     * Should be called only after database has been populated with records.
+     */
+    public boolean GetPhoneNumbersFromFile(){
+        try {
+            if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(ContactFileName, WordSeparator)){
+                String Name, Age, Sex, Address, AdmissionDate;
+                Integer ID = 0;
+                ArrayList<String> PhoneNumbers;
+
+                while(true){
+                    Name = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                    if (Name == null) break;
+                    B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+
+                    Age = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                    B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+
+                    Sex = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                    B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+
+                    Address = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                    B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+
+                    AdmissionDate = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                    B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+
+                    PhoneNumbers = new ArrayList<>();
+                    while(true){
+                        String ReadNumber = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                        if (ReadNumber.contains(LineSeparator)) break;
+                        PhoneNumbers.add(ReadNumber);
+                    }
+
+                    query = "SELECT PATIENT_ID FROM BASIC_INFO " +
+                            "WHERE PATIENT_NAME = '" + Name + "' AND " +
+                            "AGE = " + Age + " AND " +
+                            "SEX = '" + Sex + "' AND " +
+                            "ADDRESS = '" + Address + "' AND " +
+                            "ADMISSION_DATE = TO_DATE('" + AdmissionDate + "', '" + DateFormat + "')";
+
+                    System.out.println(query);
+                    ResultSet rs = statement.executeQuery(query);
+                    if (rs.next()){
+                        ID = rs.getInt("PATIENT_ID");
+                        InsertPhoneNumbers(ID, PhoneNumbers, false);
+                    }
+                }
+                return true;
+            }  else System.out.println("GetPhoneNumbersFromFile - " + "Couldn't setup reader.");
+        } catch (SQLException | Defined_Exceptions e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Method for deleting phone number from file.
+     * @return true if successful, false otherwise.
+     */
+    public boolean DeletePhoneNumberFromFile(){
+
+        return true;
     }
 
 
@@ -536,7 +689,7 @@ public class B_Database {
      * @return result stored in resultset if successful, null otherwise.
      */
     public ResultSet GetInformation(Integer ID){
-        query = "SELECT B.PATIENT_ID, B.PATIENT_NAME, B.AGE, B.SEX, B.ADDRESS, TO_CHAR(B.ADMISSION_DATE, 'YYYY/MM/DD') AS ADMISSION_DATE, ";
+        query = "SELECT B.PATIENT_ID, B.PATIENT_NAME, B.AGE, B.SEX, B.ADDRESS, TO_CHAR(B.ADMISSION_DATE, '" + DateFormat + "') AS ADMISSION_DATE, ";
         for (int i = 0; i < ListOfColumns.size(); ++i) {
             query += "I." + ListOfColumns.get(i).ColumnName;
 
@@ -932,7 +1085,7 @@ public class B_Database {
             case 2: // Column type is number. Means we do not need quotations.
                 return Value;
             case 3: // Column type is date. Means we need proper formatting.
-                return "TO_DATE('" + Value + "', 'dd/mm/yyyy')";
+                return "TO_DATE('" + Value + "', '" + DateFormat + "')";
             default:
                 return Value;
         }

@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import java.util.ArrayList;
 
 public class C_InsertColumn {
+
     @FXML private ComboBox<String> FX_ComboBox_Type;
     @FXML private TextField FX_TextField_ColumnName;
     @FXML private TextField FX_TextField_UpperLimit;
@@ -77,6 +78,7 @@ public class C_InsertColumn {
         FX_ListView_TextFields.getItems().add(textField);
         FX_ListView_Buttons.getItems().add(button);
     }
+
 
 
     private  boolean PerformChecks(String ColumnName){
