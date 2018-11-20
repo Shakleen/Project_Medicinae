@@ -8,7 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class C_MainWindow {
-    @FXML private ImageView FX_ImageView_SyncInfo;
     @FXML private ImageView FX_ImageView_ViewInfo;
     @FXML private ImageView FX_ImageView_Help;
     @FXML private ImageView FX_ImageView_Account;
@@ -46,10 +45,6 @@ public class C_MainWindow {
      * @param PreserveRatio whether to preserve the ratio of the images
      */
     public void SetUpImages(double Height, double Width, boolean PreserveRatio){
-        FX_ImageView_SyncInfo.setImage(new Image("/Images/Sync_Info.png"));
-        FX_ImageView_SyncInfo.setFitHeight(Height);
-        FX_ImageView_SyncInfo.setFitWidth(Width);
-        FX_ImageView_SyncInfo.setPreserveRatio(PreserveRatio);
 
         FX_ImageView_ViewInfo.setImage(new Image("/Images/View_Info.png"));
         FX_ImageView_ViewInfo.setFitHeight(Height);

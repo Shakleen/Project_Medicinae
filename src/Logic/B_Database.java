@@ -1,7 +1,5 @@
 package Logic;
 
-import javafx.scene.shape.LineTo;
-
 import java.sql.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -702,6 +700,36 @@ public class B_Database {
         }
         if (ResultSetHandler()) return resultSet;
         else                    return null;
+    }
+
+
+
+
+    public ResultSet SearchInformation(ArrayList<E_ColumnInfo> SearchParams){
+        query = "SELECT * FROM " +
+                "BASIC_INFO B, IN_DEPTH_INFO I " +
+                "WHERE ";
+
+        for(int i = 0; i < SearchParams.size(); ++i){
+            E_ColumnInfo Param = SearchParams.get(i);
+            query += Param.ColumnName + " = ";
+
+            switch(Param.ColumnType){
+                case 1:
+                    query += "'" + Param.ColumnValue + "'";
+                    break;
+                case 2:
+                    query += Param.ColumnValue;
+                    break;
+            }
+
+            if (i != SearchParams.size()-1)     query += " AND ";
+        }
+
+        if (ResultSetHandler())
+            return resultSet;
+
+        return null;
     }
 
 

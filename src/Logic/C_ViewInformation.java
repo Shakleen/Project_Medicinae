@@ -24,8 +24,10 @@ public class C_ViewInformation {
     @FXML private ImageView FX_ImageView_InsertInfo;
     @FXML private ImageView FX_ImageView_EditInfo;
     @FXML private ImageView FX_ImageView_DeleteInfo;
+    @FXML private ImageView FX_ImageView_SearchInfo;
     @FXML private ImageView FX_ImageView_AddColumn;
     @FXML private ImageView FX_ImageView_DeleteColumn;
+    @FXML private ImageView FX_ImageView_SyncInfo;
     @FXML private BorderPane FX_BorderPane;
 
 
@@ -45,6 +47,11 @@ public class C_ViewInformation {
         FX_ImageView_DeleteInfo.setFitWidth(50);
         FX_ImageView_DeleteInfo.setPreserveRatio(true);
 
+        FX_ImageView_SearchInfo.setImage(new Image("/Images/Search.png"));
+        FX_ImageView_SearchInfo.setFitHeight(50);
+        FX_ImageView_SearchInfo.setFitWidth(50);
+        FX_ImageView_SearchInfo.setPreserveRatio(true);
+
         FX_ImageView_AddColumn.setImage(new Image("/Images/Add_Column.png"));
         FX_ImageView_AddColumn.setFitHeight(50);
         FX_ImageView_AddColumn.setFitWidth(50);
@@ -54,6 +61,11 @@ public class C_ViewInformation {
         FX_ImageView_DeleteColumn.setFitHeight(50);
         FX_ImageView_DeleteColumn.setFitWidth(50);
         FX_ImageView_DeleteColumn.setPreserveRatio(true);
+
+        FX_ImageView_SyncInfo.setImage(new Image("/Images/Sync_Info.png"));
+        FX_ImageView_SyncInfo.setFitHeight(50);
+        FX_ImageView_SyncInfo.setFitWidth(50);
+        FX_ImageView_SyncInfo.setPreserveRatio(true);
 
         SetUpTableColumns();
         SetUpRecords(null);
@@ -309,6 +321,14 @@ public class C_ViewInformation {
             c_recordHandling.setFX_ComboBox_Sex(FX_TableView.getSelectionModel().getSelectedItem().get(3));
             c_recordHandling.setFX_TextField_Address(FX_Label_Address.getText());
             c_recordHandling.setFX_DatePicker_Admission(FX_TableView.getSelectionModel().getSelectedItem().get(4));
+            c_recordHandling.setFX_ListView_PhoneNo(FX_ListView_PhoneNumbers.getItems());
+
+            ObservableList<String> InfoList = FXCollections.observableArrayList();
+            for(int i = 5; i < FX_TableView.getSelectionModel().getSelectedItem().size(); ++i){
+                InfoList.add(FX_TableView.getSelectionModel().getSelectedItem().get(i));
+            }
+            c_recordHandling.setInDepthInformations(InfoList);
+
             String ID = FX_TableView.getSelectionModel().getSelectedItem().get(0);
 
             Optional<ButtonType> result = B_DrawWindows.getDialog().showAndWait();
@@ -559,5 +579,13 @@ public class C_ViewInformation {
                 new Thread(Task_DeleteColumns).start();
             }
         }
+    }
+
+
+    @FXML private void HandleSearchRequest(){}
+
+
+    @FXML private void HandleSyncRequest(){
+
     }
 }

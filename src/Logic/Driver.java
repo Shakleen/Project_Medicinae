@@ -5,10 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class Driver extends Application {
 
@@ -22,6 +20,7 @@ public class Driver extends Application {
 
     public static void main(String[] args) {
         System.out.println(B_Database.B_database_instance.GetTotalColumnNumber());
+        // B_Network.SearchForFile();
         launch(args);
     }
 

@@ -161,6 +161,18 @@ public class C_RecordHandling {
         this.FX_DatePicker_Admission.setValue(LocalDate.parse(Admission, DateTimeFormatter.ofPattern("yyyy/MM/dd")));
     }
 
+    public void setFX_ListView_PhoneNo(ObservableList<String> PhoneNo) {
+        for(int i = 0; i < PhoneNo.size(); ++i){
+            FX_ListView_PhoneNo.getItems().add(new TextField(PhoneNo.get(i)));
+        }
+    }
+
+    public void setInDepthInformations(ObservableList<String> InfoList){
+        for(int i = 0; i < InfoList.size(); ++i){
+            NodeArray.get(i).getSelectionModel().select(InfoList.get(i));
+        }
+    }
+
     public boolean EditInformation(Integer ID){
         ArrayList<E_ColumnInfo> EditColumnInfo = new ArrayList<>();
         String Name = FX_TextField_Name.getText().trim();

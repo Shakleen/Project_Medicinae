@@ -16,13 +16,6 @@
         </graphic>
     </Button>
 
-    <!-- Button for syncing information -->
-    <Button minHeight="75" minWidth="250" text="Sync Information" GridPane.columnIndex="1" GridPane.rowIndex="3">
-        <graphic>
-            <ImageView fx:id="FX_ImageView_SyncInfo" />
-        </graphic>
-    </Button>
-
     <!-- Button for looking up help -->
     <Button minHeight="75" minWidth="250" text="Help" GridPane.columnIndex="1" GridPane.rowIndex="4">
         <graphic>

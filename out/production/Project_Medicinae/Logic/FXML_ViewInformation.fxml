@@ -88,6 +88,36 @@
                     </Tooltip>
                 </tooltip>
             </Button>
+
+            <!-- Button for searching information -->
+            <Button onAction="#HandleSearchRequest">
+                <graphic>
+                    <ImageView fx:id="FX_ImageView_SearchInfo" />
+                </graphic>
+
+                <tooltip>
+                    <Tooltip>
+                        <text>
+                            Search Patient Data
+                        </text>
+                    </Tooltip>
+                </tooltip>
+            </Button>
+
+            <!-- Button for syncing information -->
+            <Button onAction="#HandleSyncRequest">
+                <graphic>
+                    <ImageView fx:id="FX_ImageView_SyncInfo" />
+                </graphic>
+
+                <tooltip>
+                    <Tooltip>
+                        <text>
+                            Sync Patient Data
+                        </text>
+                    </Tooltip>
+                </tooltip>
+            </Button>
         </ToolBar>
     </top>
 
