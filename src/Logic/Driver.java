@@ -19,34 +19,6 @@ public class Driver extends Application {
     }
 
     public static void main(String[] args) {
-        System.out.println(B_Database.B_database_instance.GetTotalColumnNumber());
         launch(args);
-    }
-
-    public static void Print(){
-        try{
-            ResultSet rs = B_Database.B_database_instance.GetInformation(null);
-
-            if (rs == null){
-                System.out.println("Result set is null!");
-            }
-            else {
-                System.out.println("ID\t\tName\t\tAge\t\tSex\t\tAddress\t\tAdmission_Date\n");
-                while(rs.next()){
-                    System.out.print(rs.getString("PATIENT_ID") + "\n");
-                    System.out.print(rs.getString("PATIENT_NAME") + "\n");
-                    System.out.print(rs.getString("AGE") + "\n");
-                    System.out.print(rs.getString("SEX") + "\n");
-                    System.out.print(rs.getString("ADDRESS") + "\n");
-                    System.out.print(rs.getString("ADMISSION_DATE") + "\n");
-                    for(int i = 0; i < B_Database.ListOfColumns.size(); ++i){
-                        System.out.println(rs.getString(B_Database.ListOfColumns.get(i).ColumnName));
-                    }
-                    System.out.println("\n\n");
-                }
-            }
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
     }
 }

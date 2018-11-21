@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Logic.C_SearchHandling"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <content>
+        <BorderPane>
+            <top>
+                <GridPane>
+                    <Label text="Name" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <TextField fx:id="FX_TextField_Name" text="Enter Name" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Address" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                    <TextField fx:id="FX_TextField_Address" text="Enter Address" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+
+                    <Label text="Age" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+                    <ComboBox fx:id="FX_ComboBox_Age" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+
+                    <Label text="Sex" GridPane.rowIndex="1" GridPane.columnIndex="4"/>
+                    <ComboBox fx:id="FX_ComboBox_Sex" GridPane.rowIndex="2" GridPane.columnIndex="4"/>
+
+                    <Button onAction="#HandleSearch" text="Search" GridPane.rowIndex="1" GridPane.columnIndex="6"/>
+                </GridPane>
+            </top>
+
+            <center>
+                <ScrollPane fx:id="FX_ScrollPane" hbarPolicy="ALWAYS" vbarPolicy="AS_NEEDED" fitToWidth="true" fitToHeight="true">
+                    <TableView fx:id="FX_TableView"/>
+                </ScrollPane>
+            </center>
+        </BorderPane>
+    </content>
+</DialogPane>

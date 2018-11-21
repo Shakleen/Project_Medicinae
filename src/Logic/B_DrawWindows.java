@@ -68,14 +68,6 @@ public class B_DrawWindows {
         return false;
     }
 
-
-    /**
-     * Method to close stage.
-     */
-    public void CloseStage(){
-        Stage.close();
-    }
-
     /**
      * Create the log in dialog.
      * @param DialogName Name of the dialog.
@@ -137,26 +129,6 @@ public class B_DrawWindows {
 
     public static FXMLLoader getFxmlLoader() {
         return fxmlLoader;
-    }
-
-    public static DialogPane getDialogPane() {
-        return dialogPane;
-    }
-
-    public static Background getDialogBackground() {
-        return DialogBackground;
-    }
-
-    public static String getDialogStyleCSS() {
-        return DialogStyleCSS;
-    }
-
-    public static String getFontName() {
-        return FontName;
-    }
-
-    public static Alert getAlert() {
-        return alert;
     }
 
     public static Optional<ButtonType> getAlertResult() {

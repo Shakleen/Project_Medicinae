@@ -14,19 +14,19 @@ import java.util.ArrayList;
  * @since 05/11/2018
  */
 public class B_Database {
-    private Connection connection;  // Connection type object to get connection using driver.
-    private Statement statement;    // Statement type object to execute DDL and DML queries.
-    private String query;           // Holds query for execution by statement object.
-    private String values;          // Used to store column values.
-    private ResultSet resultSet;    // ResultSet type object to return database tables.
-    public final String ColumnFileName = "ColumnNames.txt";        // Name of the file where column information is kept.
-    public final String RecordFileName = "A.txt";        // Name of the file where column information is kept.
-    public final String ContactFileName = "AC.txt";        // Name of the file where column information is kept.
-    private final String WordSeparator = "#";
-    private final String LineSeparator = "|";
-    private final String Seperator = WordSeparator + LineSeparator + '\n' + WordSeparator;
-    public final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-    private final String DateFormat = "YYYY/MM/DD";
+    private static Connection connection;  // Connection type object to get connection using driver.
+    private static Statement statement;    // Statement type object to execute DDL and DML queries.
+    private static String query;           // Holds query for execution by statement object.
+    private static String values;          // Used to store column values.
+    private static ResultSet resultSet;    // ResultSet type object to return database tables.
+    public static final String ColumnFileName = "ColumnNames.txt";        // Name of the file where column information is kept.
+    public static final String RecordFileName = "A.txt";        // Name of the file where column information is kept.
+    public static final String ContactFileName = "AC.txt";        // Name of the file where column information is kept.
+    private static final String WordSeparator = "#";
+    private static final String LineSeparator = "|";
+    private static final String Seperator = WordSeparator + LineSeparator + '\n' + WordSeparator;
+    public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+    private static final String DateFormat = "YYYY/MM/DD";
     public static ArrayList<E_ColumnInfo> ListOfColumns;
 
     // This is a static instance of the class. It will be the only object that will handle the communication with the database.
@@ -59,7 +59,7 @@ public class B_Database {
      * Method for checking and setting up the database.
      * @return true if successful. false otherwise.
      */
-    private boolean SetupDatabaseForUsage(){
+    private static boolean SetupDatabaseForUsage(){
         try{
             boolean BASIC_INFO = false, IN_DEPTH_INFO = false;
             ResultSet rs = statement.executeQuery("SELECT TABLE_NAME FROM USER_TABLES WHERE TABLE_NAME LIKE 'BASIC_INFO'");
@@ -83,7 +83,7 @@ public class B_Database {
     /**
      * Method that checks if the files on disk are corrupted and requires download from cloud.
      */
-    private void CheckAndDownload(){
+    private static void CheckAndDownload(){
         if (!new File(ColumnFileName).exists()){
             B_Network.DownloadFromDrive(ColumnFileName);
         }
@@ -102,7 +102,7 @@ public class B_Database {
      * @throws Defined_Exceptions an exception is thrown when no account is logged in.
      * @return true if successful, false otherwise.
      */
-    public boolean UpdateDatabase() throws Defined_Exceptions{
+    public static boolean UpdateDatabase() throws Defined_Exceptions{
         // Checks to see if there is a connection before proceeding.
         if (connection == null) throw new Defined_Exceptions("SQL_ACCOUNT_ERROR");
 
@@ -125,7 +125,7 @@ public class B_Database {
      * Method to get the column information from file.
      * @return true if successful, false otherwise.
      */
-    private boolean SetupTableColumnsFromFile() throws Defined_Exceptions{
+    private static boolean SetupTableColumnsFromFile() throws Defined_Exceptions{
         if (connection == null)
             return false;
 
@@ -152,7 +152,7 @@ public class B_Database {
      * Method for retrieving column related information from file and storing them into a list.
      * @return true if successful, false otherwise.
      */
-    public boolean GetColumnInfoFromFile(){
+    public static boolean GetColumnInfoFromFile(){
         String ColumnName = null, LineRead = null, temp = null;
         Integer ColumnType = null, ColumnSize = null;
         ArrayList<String> DomainValues = null;
@@ -232,7 +232,7 @@ public class B_Database {
      * Method for creating table structure.
      * @return true when success otherwise false.
      */
-    private boolean CreateTableStructure(){
+    private static boolean CreateTableStructure(){
         query = "CREATE TABLE BASIC_INFO(" +
                     "PATIENT_ID NUMBER," +
                     "PATIENT_NAME VARCHAR2(100)," +
@@ -275,7 +275,7 @@ public class B_Database {
      * Method for updating record from file.
      * @return true if successful, false otherwise.
      */
-    private boolean UpdateRecords(){
+    private static boolean UpdateRecords(){
         if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(RecordFileName, WordSeparator)){
                 String Name = null, Value = null;
                 Integer Type = null;
@@ -325,7 +325,7 @@ public class B_Database {
      * @param InDepthColumns the in depth information.
      * @return true if successful, false otherwise.
      */
-    public boolean InsertInformation(ArrayList<E_ColumnInfo> BasicColumns, ArrayList<E_ColumnInfo> InDepthColumns, boolean WrtieCondition){
+    public static boolean InsertInformation(ArrayList<E_ColumnInfo> BasicColumns, ArrayList<E_ColumnInfo> InDepthColumns, boolean WrtieCondition){
         try{
             if (InsertBasicInformation(BasicColumns, true)){
                 if (InsertBasicInformation(InDepthColumns, false)){
@@ -368,7 +368,7 @@ public class B_Database {
      * @throws Defined_Exceptions when there are no column information is given or when columns is null.
      * @return true if successful. False otherwise.
      */
-    private boolean InsertBasicInformation(ArrayList<E_ColumnInfo> Columns, boolean Type) throws Defined_Exceptions{
+    private static boolean InsertBasicInformation(ArrayList<E_ColumnInfo> Columns, boolean Type) throws Defined_Exceptions{
         // Check to see if columns is null.
         if (Columns == null)            throw new Defined_Exceptions("NULL_COLUMN_ARRAY");
         // No column information given exception
@@ -393,7 +393,7 @@ public class B_Database {
      * @throws Defined_Exceptions when null array or zero phone numbers have been given.
      * @return true if addition is successful. False otherwise.
      */
-    public boolean InsertPhoneNumbers(Integer ID, ArrayList<String> PhoneNumbers, boolean WriteCondition) throws Defined_Exceptions{
+    public static boolean InsertPhoneNumbers(Integer ID, ArrayList<String> PhoneNumbers, boolean WriteCondition) throws Defined_Exceptions{
         // Check if null
         if (PhoneNumbers == null)               throw new Defined_Exceptions("NULL_COLUMN_ARRAY");
         // Check if zero elements
@@ -428,7 +428,7 @@ public class B_Database {
      * @throws Defined_Exceptions when null array or zero phone numbers have been given.
      * @return true if addition is successful. False otherwise.
      */
-    public boolean InsertPhoneNumbers(ArrayList<E_ColumnInfo> Basic_Info, ArrayList<String> PhoneNumbers, boolean WriteCondition){
+    public static boolean InsertPhoneNumbers(ArrayList<E_ColumnInfo> Basic_Info, ArrayList<String> PhoneNumbers, boolean WriteCondition){
         String Name = Basic_Info.get(0).ColumnValue;
         String Age = Basic_Info.get(1).ColumnValue;
         String Sex = Basic_Info.get(2).ColumnValue;
@@ -463,7 +463,7 @@ public class B_Database {
      * Method for writing phone numbers to files.
      * Should be called only after database has been populated with records.
      */
-    private boolean WritePhoneNumbersToFile(Integer ID, String PhoneNumbers){
+    private static boolean WritePhoneNumbersToFile(Integer ID, String PhoneNumbers){
         try {
             query = "SELECT PATIENT_NAME, AGE, SEX, ADDRESS, TO_CHAR(ADMISSION_DATE, '" + DateFormat + "') AS ADMISSION_DATE FROM BASIC_INFO WHERE PATIENT_ID = " + ID.toString();
             ResultSet rs = statement.executeQuery(query);
@@ -498,7 +498,7 @@ public class B_Database {
      * Method for extracting phone numbers from files for patients.
      * Should be called only after database has been populated with records.
      */
-    public boolean GetPhoneNumbersFromFile(){
+    public static boolean GetPhoneNumbersFromFile(){
         try {
             if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(ContactFileName, WordSeparator)){
                 String Name, Age, Sex, Address, AdmissionDate;
@@ -557,7 +557,7 @@ public class B_Database {
      * Method for deleting phone number from file.
      * @return true if successful, false otherwise.
      */
-    public boolean DeletePhoneNumberFromFile(){
+    public static boolean DeletePhoneNumberFromFile(){
 
         return true;
     }
@@ -569,7 +569,7 @@ public class B_Database {
      * @param Columns the column information to be updated.
      * @throws Defined_Exceptions when null or no column information has been given.
      */
-    public boolean UpdateInformation(Integer ID, ArrayList<E_ColumnInfo> Columns) throws Defined_Exceptions{
+    public static boolean UpdateInformation(Integer ID, ArrayList<E_ColumnInfo> Columns) throws Defined_Exceptions{
         // Check if columns is null
         if (Columns == null)          throw new Defined_Exceptions("NULL_COLUMN_ARRAY");
         // No column information given exception
@@ -595,7 +595,7 @@ public class B_Database {
      * @param Columns the column information to be updated.
      * @return
      */
-    public boolean UpdateRecordFile(ArrayList<E_ColumnInfo> Columns, boolean Type, String Name){
+    public static boolean UpdateRecordFile(ArrayList<E_ColumnInfo> Columns, boolean Type, String Name){
         // Setup file reader and continue only if successful.
         if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(RecordFileName, WordSeparator)) {
             String TempFile = "Temp.txt", Fragment = null, TempLine = null;
@@ -666,7 +666,7 @@ public class B_Database {
      * @param start the starting of the loop.
      * @param finish the ending of the loop.
      */
-    private void LoopThrough(ArrayList<E_ColumnInfo> Columns, int start, int finish, Integer ID){
+    private static void LoopThrough(ArrayList<E_ColumnInfo> Columns, int start, int finish, Integer ID){
         E_ColumnInfo column;
         // Go through each column name and information and add it to the query statement.
         for(int i = start; i < finish; ++i){
@@ -688,7 +688,7 @@ public class B_Database {
      * @param Name the name of the record holder to be deleted.
      * @return true if successful. False otherwise.
      */
-    public boolean DeleteRecordData(Integer ID, String Name){
+    public static boolean DeleteRecordData(Integer ID, String Name){
         query = "DELETE FROM IN_DEPTH_INFO WHERE PATIENT_ID = " + ID.toString();
         if (HandleUpdateExecution()){
             query = "DELETE FROM BASIC_INFO WHERE PATIENT_ID = " + ID.toString();
@@ -705,7 +705,7 @@ public class B_Database {
      * @param ID the id of the patient whose information is to be received. IF null, all record data is fetched.
      * @return result stored in resultset if successful, null otherwise.
      */
-    public ResultSet GetInformation(Integer ID){
+    public static ResultSet GetInformation(Integer ID){
         query = "SELECT B.PATIENT_ID, B.PATIENT_NAME, B.AGE, B.SEX, B.ADDRESS, TO_CHAR(B.ADMISSION_DATE, '" + DateFormat + "') AS ADMISSION_DATE, ";
         for (int i = 0; i < ListOfColumns.size(); ++i) {
             query += "I." + ListOfColumns.get(i).ColumnName;
@@ -722,27 +722,40 @@ public class B_Database {
     }
 
 
-
-
-    public ResultSet SearchInformation(ArrayList<E_ColumnInfo> SearchParams){
+    /**
+     * Method for searching information.
+     * @param Name Name of the patient
+     * @param Age Age of the patient
+     * @param Sex sex of the patient
+     * @param Address address of the patient
+     * @return ResultSet containing information.
+     */
+    public static ResultSet SearchInformation(String Name, String Age, String Sex, String Address){
         query = "SELECT * FROM " +
                 "BASIC_INFO B, IN_DEPTH_INFO I " +
-                "WHERE ";
+                "WHERE";
 
-        for(int i = 0; i < SearchParams.size(); ++i){
-            E_ColumnInfo Param = SearchParams.get(i);
-            query += Param.ColumnName + " = ";
+        int c = 0;
+        if (Name != null){
+            query += " B.PATIENT_NAME LIKE '%" + Name + "%'";
+            ++c;
+        }
 
-            switch(Param.ColumnType){
-                case 1:
-                    query += "'" + Param.ColumnValue + "'";
-                    break;
-                case 2:
-                    query += Param.ColumnValue;
-                    break;
-            }
+        if (Age != null){
+            if (c > 0)  query += " AND";
+            query += " B.AGE = " + Age;
+            ++c;
+        }
 
-            if (i != SearchParams.size()-1)     query += " AND ";
+        if (Sex != null){
+            if (c > 0)  query += " AND";
+            query += " B.SEX = '" + Sex + "'";
+            ++c;
+        }
+
+        if (Address != null){
+            if (c > 0)  query += " AND";
+            query += " B.ADDRESS = '" + Address + "'";
         }
 
         if (ResultSetHandler())
@@ -756,7 +769,7 @@ public class B_Database {
      * Method for getting the total number of records in the database.
      * @return the total number of records in the database if successful otherwise -1.
      */
-    public Integer GetTotalRecordNumber(){
+    public static Integer GetTotalRecordNumber(){
         query = "SELECT MAX(PATIENT_ID) AS MAX FROM BASIC_INFO";
         return IntegerHandler();
     }
@@ -767,7 +780,7 @@ public class B_Database {
      * @param ID the ID of the patient whose basic information is to be retrieved.
      * @return result stored in resultset if successful, null otherwise.
      */
-    public ResultSet GetAddress(Integer ID){
+    public static ResultSet GetAddress(Integer ID){
         query = "SELECT ADDRESS FROM BASIC_INFO B WHERE B.PATIENT_ID = " + ID.toString();
         if (ResultSetHandler()) return resultSet;
         else                    return null;
@@ -780,7 +793,7 @@ public class B_Database {
      * @param type if table type then 1, if record type then 2.
      * @return true if successful. False otherwise.
      */
-    public boolean ExecuteStatement(String Exec, int type){
+    public static boolean ExecuteStatement(String Exec, int type){
         try{
             System.out.println("From ExeQur: " + Exec);
             statement.execute(Exec);
@@ -798,7 +811,7 @@ public class B_Database {
      * @param ID the ID of the patient whose phone numbers are desired.
      * @return a result set containing the information if successfully retrieved or null otherwise.
      */
-    public ResultSet GetPhoneNumbers(Integer ID){
+    public static ResultSet GetPhoneNumbers(Integer ID){
         query = "SELECT PHONE_NUMBER FROM PATIENT_PHONE_NUMBERS WHERE PATIENT_ID = " + ID.toString();
         if (ResultSetHandler()) return resultSet;
         else                    return null;
@@ -814,7 +827,7 @@ public class B_Database {
      * @throws Defined_Exceptions when the VARCHAR2 is set as size 0.
      * @return true if successful, false otherwise.
      */
-    public boolean AddColumn(String ColumnName, Integer ColumnType, Integer ColumnSize, boolean WriteCondition) throws Defined_Exceptions{
+    public static boolean AddColumn(String ColumnName, Integer ColumnType, Integer ColumnSize, boolean WriteCondition) throws Defined_Exceptions{
         // Zero varchar2 not allowed.
         if (ColumnType == 1 && ColumnSize == 0) throw new Defined_Exceptions("VARCHAR_SIZE_ZERO");
 
@@ -853,7 +866,7 @@ public class B_Database {
      * @throws Defined_Exceptions when either of the following happens: Not number type, same upper and lower limit, same named column.
      * @return true if successful, false otherwise.
      */
-    public boolean AddColumnWithCheck(String ColumnName, Integer ColumnType, Integer UpperBound, Integer LowerBound, boolean WriteCondition) throws Defined_Exceptions{
+    public static boolean AddColumnWithCheck(String ColumnName, Integer ColumnType, Integer UpperBound, Integer LowerBound, boolean WriteCondition) throws Defined_Exceptions{
         // Column is not of number type
         if (ColumnType != 2)                throw new Defined_Exceptions("NOT_NUMBER");
         // Same value for upper and lower limit not allowed.
@@ -884,7 +897,7 @@ public class B_Database {
      * @throws Defined_Exceptions if the columns parameters don't meet the requirements.
      * @return true if successful, false otherwise.
      */
-    public boolean AddColumnWithCheck(String ColumnName, Integer ColumnType, Integer ColumnSize, ArrayList<String> DomainValues, boolean WriteCondition) throws Defined_Exceptions{
+    public static boolean AddColumnWithCheck(String ColumnName, Integer ColumnType, Integer ColumnSize, ArrayList<String> DomainValues, boolean WriteCondition) throws Defined_Exceptions{
         // This method can only be used for VARCHAR2 type columns.
         if (ColumnType != 1)                throw new Defined_Exceptions("NOT_VARCHAR");
         // VARCHAR2 can't be of size 0.
@@ -924,7 +937,7 @@ public class B_Database {
      * @param ColumnName the name of the column to be dropped.
      * @return true if successful, false otherwise.
      */
-    public boolean DropColumn(String ColumnName){
+    public static boolean DropColumn(String ColumnName){
         query = "ALTER TABLE IN_DEPTH_INFO DROP COLUMN " + ColumnName;
         boolean con = ExecuteStatement(query, 0);
 
@@ -944,7 +957,7 @@ public class B_Database {
      * @param ColumnName the nme of the column to be dropped.
      * @return true if successful, false otherwise.
      */
-    public boolean DropColumnWithConstraint(String ColumnName){
+    public static boolean DropColumnWithConstraint(String ColumnName){
         query = "ALTER TABLE IN_DEPTH_INFO DROP CONSTRAINT CHK_IND_" + ColumnName;
         if (ExecuteStatement(query, 0)){
             if(DropColumn(ColumnName)) return true;
@@ -960,7 +973,7 @@ public class B_Database {
      * Method for updating the column list file.
      * @return true if successful. False otherwise.
      */
-    private boolean UpdateColumnList(String ColumnName){
+    private static boolean UpdateColumnList(String ColumnName){
         // Setup file reader and continue only if successful.
         if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(ColumnFileName, WordSeparator)) {
             String TempFile = "Temp.txt", Fragment = null, TempLine = null;
@@ -1015,7 +1028,7 @@ public class B_Database {
      * Method for getting the total number of columns in the table.
      * @return number if successful otherwise null.
      */
-    public Integer GetTotalColumnNumber(){
+    public static Integer GetTotalColumnNumber(){
         // COLUMN_NAME FROM USER_TAB_COLUMNS WHERE TABLE_NAME='IN_DEPTH_INFO'
         query = "SELECT COUNT(*) FROM USER_TAB_COLUMNS WHERE TABLE_NAME='IN_DEPTH_INFO'";
         try {
@@ -1036,7 +1049,7 @@ public class B_Database {
      * Handles execution of statement and produces a result set. Primarily used to retrieve data.
      * @return true if successful execution. false otherwise.
      */
-    private boolean ResultSetHandler(){
+    private static boolean ResultSetHandler(){
         try{
             resultSet = statement.executeQuery(query);
             return true;
@@ -1051,7 +1064,7 @@ public class B_Database {
      * Handles execution of statement and produces a result set. Primarily used to retrieve data.
      * @return true if successful execution. false otherwise.
      */
-    private Integer IntegerHandler(){
+    private static Integer IntegerHandler(){
         try{
             resultSet = statement.executeQuery(query);
             resultSet.next();
@@ -1067,7 +1080,7 @@ public class B_Database {
      * Handles execution of statement and produces a integer. Primarily used to update data.
      * @return true if integer produced is non-zero. false otherwise.
      */
-    private boolean HandleUpdateExecution(){
+    private static boolean HandleUpdateExecution(){
         try{
             System.out.println(query);
             if (statement.executeUpdate(query) > 0) return true;
@@ -1084,7 +1097,7 @@ public class B_Database {
      * @param Query the statement to execute.
      * @return true if successful. False otherwise.
      */
-    public boolean HandleUpdateExecution(String Query){
+    public static boolean HandleUpdateExecution(String Query){
         try{
             if (statement.executeUpdate(Query) > 0) return true;
         } catch (SQLException e){
@@ -1099,7 +1112,7 @@ public class B_Database {
      * Builds the insert query that will be executed.
      * @param Columns the column information to be inserted.
      */
-    private void InsertQueryBuilder(ArrayList<E_ColumnInfo> Columns){
+    private static void InsertQueryBuilder(ArrayList<E_ColumnInfo> Columns){
         E_ColumnInfo column;
 
         for(int i = 0; i < Columns.size(); ++i){
@@ -1125,7 +1138,7 @@ public class B_Database {
      * @param type the type of the column. 1-> VARCHAR2, 2->NUMBER, 3->DATE.
      * @return the string to be appended.
      */
-    private String AppendBasedOnType(String Value, int type){
+    private static String AppendBasedOnType(String Value, int type){
         switch(type){
             case 1: // Column type is VARCHAR2. Means we need quotations.
                 return "'" + Value + "'";

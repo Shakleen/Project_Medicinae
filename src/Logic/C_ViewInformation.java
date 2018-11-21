@@ -582,10 +582,83 @@ public class C_ViewInformation {
     }
 
 
-    @FXML private void HandleSearchRequest(){}
+    @FXML private void HandleSearchRequest(){
+        boolean con = B_DrawWindows.B_DrawWindows_instance.DrawDialog(
+                "FXML_SearchHandling.fxml",
+                "Search for patient data",
+                "Provide parameter values to search",
+                FX_BorderPane
+        );
+
+        if (con) {
+            C_SearchHandling c_searchHandling = B_DrawWindows.getFxmlLoader().getController();
+
+            Optional<ButtonType> result = B_DrawWindows.getDialog().showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+
+            }
+        }
+    }
 
 
     @FXML private void HandleSyncRequest(){
+        Task<Boolean> Task_UploadToDrive = new Task<Boolean>() {
+            Boolean Status = false;
 
+            @Override
+            protected Boolean call() throws Exception {
+                Status = B_Network.UploadToDrive(B_Database.ColumnFileName);
+                updateProgress(1, 3);
+                Status = B_Network.UploadToDrive(B_Database.RecordFileName);
+                updateProgress(2, 3);
+                Status = B_Network.UploadToDrive(B_Database.ContactFileName);
+                updateProgress(3, 3);
+                return Status;
+            }
+
+            @Override
+            protected void succeeded() {
+                FX_ProgressBar.setVisible(false);
+
+                if (Status) {
+                    B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                            "Success",
+                            "Sync successful",
+                            "Information successfully uploaded to drive.",
+                            "INFORMATION"
+                    );
+                } else {
+                    B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                            "Failed",
+                            "Sync failed",
+                            "Information could not be uploaded to drive.",
+                            "ERROR"
+                    );
+                }
+            }
+
+            @Override
+            protected void failed() {
+                B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                        "Failed",
+                        "Sync failed",
+                        "Information could not be uploaded to drive.",
+                        "ERROR"
+                );
+            }
+
+            @Override
+            protected void cancelled() {
+                B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                        "Cancelled",
+                        "Sync cancelled",
+                        "Sync was cancelled by user.",
+                        "INFORMATION"
+                );
+            }
+        };
+        FX_ProgressBar.setVisible(true);
+        FX_ProgressBar.progressProperty().bind(Task_UploadToDrive.progressProperty());
+        new Thread(Task_UploadToDrive).start();
     }
 }

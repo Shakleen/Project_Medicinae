@@ -17,6 +17,9 @@ import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 
 import java.io.*;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
@@ -64,6 +67,10 @@ public class B_Network {
      * @return true if successful. False otherwise.
      */
     public static boolean UploadToDrive(String FileName){
+        if (isInternetAvailable() == false){
+            return false;
+        }
+
         try {
             // Build a new authorized API client service.
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -79,6 +86,8 @@ public class B_Network {
             FileContent mediaContent = new FileContent(MIME, filePath);
             File file = service.files().create(fileMetadata, mediaContent).setFields("id").execute();
             System.out.println("File ID: " + file.getId());
+
+            return true;
         } catch (IOException e){
             System.out.println(e.getClass().getName());
         }
@@ -95,6 +104,10 @@ public class B_Network {
      * @return true if successful. False otherwise.
      */
     public static boolean DownloadFromDrive(String FileName){
+        if (isInternetAvailable() == false){
+            return false;
+        }
+
         try{
             // Build a new authorized API client service.
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -131,5 +144,35 @@ public class B_Network {
         }
 
         return true;
+    }
+
+
+    /**
+     * Method for checking whether an internet connection is available.
+     * @return true if available, otherwise false.
+     * @throws IOException
+     */
+    private static boolean isInternetAvailable() {
+        try {
+            return isHostAvailable("google.com") || isHostAvailable("amazon.com")
+                    || isHostAvailable("facebook.com") || isHostAvailable("apple.com");
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private static boolean isHostAvailable(String hostName) throws IOException {
+        try(Socket socket = new Socket()) {
+            int port = 80;
+            InetSocketAddress socketAddress = new InetSocketAddress(hostName, port);
+            socket.connect(socketAddress, 3000);
+
+            return true;
+        }
+        catch(UnknownHostException unknownHost) {
+            return false;
+        }
     }
 }
