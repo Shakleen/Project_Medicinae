@@ -16,11 +16,8 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
@@ -97,27 +94,34 @@ public class B_Network {
      * Method for getting the file list in google drive.
      * @return true if successful. False otherwise.
      */
-    public static boolean SearchForFile(){
+    public static boolean DownloadFromDrive(String FileName){
         try{
             // Build a new authorized API client service.
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                    .setApplicationName(APPLICATION_NAME)
-                    .build();
+                    .setApplicationName(APPLICATION_NAME).build();
 
             // Print the names and IDs for up to 10 files.
-            FileList result = service.files().list().setPageSize(10).setFields("nextPageToken, files(id, name)").execute();
-            List<File> files = result.getFiles();
-            if (files == null || files.isEmpty())
-                System.out.println("No files found.");
-            else {
-                System.out.println("Files:");
-                for (File file : files) {
-                    System.out.printf("%s (%s)\n", file.getName(), file.getId());
+            while(true) {
+                FileList result = service.files().list().setPageSize(25).setFields("nextPageToken, files(id, name)").execute();
+                List<File> files = result.getFiles();
+                if (files == null || files.isEmpty()) {
+                    System.out.println("No files found.");
+                    break;
+                } else {
+                    System.out.println("Files:");
+                    for (File file : files) {
+                        System.out.printf("%s (%s)\n", file.getName(), file.getId());
+                        if (file.getName().equals(FileName)) {
+                            OutputStream outputStream = new ByteArrayOutputStream();
+                            service.files().get(file.getId()).executeMediaAndDownloadTo(outputStream);
+                            B_FileSystem.B_FileSystem_instance.WriteToFile(outputStream.toString(), FileName, false);
+                            outputStream.flush();   outputStream.close();
+                            return true;
+                        }
+                    }
                 }
             }
-
-            return true;
         }
         catch (IOException e){
             System.out.println(e.getClass().getName());
@@ -126,6 +130,6 @@ public class B_Network {
             System.out.println(e.getClass().getName());
         }
 
-        return false;
+        return true;
     }
 }

@@ -1,5 +1,6 @@
 package Logic;
 
+import java.io.File;
 import java.sql.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -18,9 +19,9 @@ public class B_Database {
     private String query;           // Holds query for execution by statement object.
     private String values;          // Used to store column values.
     private ResultSet resultSet;    // ResultSet type object to return database tables.
-    private final String ColumnFileName = "ColumnNames.txt";        // Name of the file where column information is kept.
-    private final String RecordFileName = "A.txt";        // Name of the file where column information is kept.
-    private final String ContactFileName = "AC.txt";        // Name of the file where column information is kept.
+    public final String ColumnFileName = "ColumnNames.txt";        // Name of the file where column information is kept.
+    public final String RecordFileName = "A.txt";        // Name of the file where column information is kept.
+    public final String ContactFileName = "AC.txt";        // Name of the file where column information is kept.
     private final String WordSeparator = "#";
     private final String LineSeparator = "|";
     private final String Seperator = WordSeparator + LineSeparator + '\n' + WordSeparator;
@@ -66,6 +67,8 @@ public class B_Database {
             rs = statement.executeQuery("SELECT TABLE_NAME FROM USER_TABLES WHERE TABLE_NAME LIKE 'IN_DEPTH_INFO'");
             IN_DEPTH_INFO = rs.next();
 
+            CheckAndDownload();
+
             ListOfColumns = new ArrayList<>();
             GetColumnInfoFromFile();
 
@@ -74,6 +77,22 @@ public class B_Database {
 
         }
         return false;
+    }
+
+
+    /**
+     * Method that checks if the files on disk are corrupted and requires download from cloud.
+     */
+    private void CheckAndDownload(){
+        if (!new File(ColumnFileName).exists()){
+            B_Network.DownloadFromDrive(ColumnFileName);
+        }
+        if (!new File(RecordFileName).exists()){
+            B_Network.DownloadFromDrive(RecordFileName);
+        }
+        if (!new File(ContactFileName).exists()){
+            B_Network.DownloadFromDrive(ContactFileName);
+        }
     }
 
 
