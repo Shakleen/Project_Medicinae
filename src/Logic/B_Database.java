@@ -557,9 +557,57 @@ public class B_Database {
      * Method for deleting phone number from file.
      * @return true if successful, false otherwise.
      */
-    public static boolean DeletePhoneNumberFromFile(){
+    public static boolean DeletePhoneNumberFromFile(String Name, String Age, String Sex, String Address, String AdmissionDate){
+        if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(ContactFileName, WordSeparator)){
+            String ReadName, ReadAge, ReadSex, ReadAddress, ReadAdmissionDate;
+            boolean Append = false;
 
-        return true;
+            while(true){
+                ReadName = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                if (ReadName == null)   break;
+                B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+
+                ReadAge = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+
+                ReadSex = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+
+                ReadAddress = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+
+                ReadAdmissionDate = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+
+                String LineToWrite = ReadName + WordSeparator + ReadAge + WordSeparator + ReadSex + WordSeparator +
+                        ReadAddress + WordSeparator + ReadAdmissionDate + WordSeparator, PhoneNo = "";
+
+                while (true){
+                    PhoneNo = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                    B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+
+                    if (PhoneNo.contains(LineSeparator)){
+                        LineToWrite += LineSeparator + '\n' + WordSeparator;
+                        break;
+                    }
+                    else {
+                        LineToWrite += PhoneNo + WordSeparator;
+                    }
+                }
+
+                boolean WriteCondition = ReadName.equals(Name) && ReadAge.equals(Age) && ReadSex.equals(Sex) &&
+                        ReadAddress.equals(Address) && ReadAdmissionDate.equals(AdmissionDate);
+
+                System.out.println("WRITE CONDITION IS " + WriteCondition + " FOR NAME = " + ReadName);
+                if (!WriteCondition){
+                    Append = B_FileSystem.B_FileSystem_instance.WriteToFile(LineToWrite, "Temp.txt", Append);
+                }
+            }
+
+            return WriteFromTempFile(ContactFileName);
+        }
+
+        return false;
     }
 
 
@@ -634,26 +682,40 @@ public class B_Database {
                 B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine, TempFile, true);
             }
 
-            // Write temp back to main file.
-            if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(TempFile)) {
-                Append = false;
-                do {
-                    // Read from temp file.
-                    TempLine = B_FileSystem.B_FileSystem_instance.ReadFromFileNextLine();
-
-                    // If line read isn't null then write it back to column file.
-                    if (TempLine != null)
-                        if (TempLine.length() > 2)
-                            Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine + "\n", RecordFileName, Append);
-                        else
-                            Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine, RecordFileName, Append);
-                } while (TempLine != null);
-
-                B_FileSystem.B_FileSystem_instance.WriteToFile("\n", TempFile, false);
-
-                return true;
-            } else System.out.println("UpdateRecordFile - Failed to setup file reader for temp");
+            return WriteFromTempFile(RecordFileName);
         } else System.out.println("UpdateRecordFile - Failed to setup file reader for " + RecordFileName);
+
+        return false;
+    }
+
+
+    /**
+     * Method for writing back from temp file.
+     * @return true if successful, false otherwise.
+     */
+    private static boolean WriteFromTempFile(String FileToWriteTo){
+        String TempFile = "Temp.txt", TempLine = "";
+        boolean Append;
+
+        // Write temp back to main file.
+        if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(TempFile)) {
+            Append = false;
+            do {
+                // Read from temp file.
+                TempLine = B_FileSystem.B_FileSystem_instance.ReadFromFileNextLine();
+
+                // If line read isn't null then write it back to column file.
+                if (TempLine != null)
+                    if (TempLine.length() > 2)
+                        Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine + "\n", FileToWriteTo, Append);
+                    else
+                        Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine, FileToWriteTo, Append);
+            } while (TempLine != null);
+
+            B_FileSystem.B_FileSystem_instance.WriteToFile("\n", TempFile, false);
+
+            return true;
+        } else System.out.println("UpdateRecordFile - Failed to setup file reader for temp");
 
         return false;
     }
@@ -691,9 +753,34 @@ public class B_Database {
     public static boolean DeleteRecordData(Integer ID, String Name){
         query = "DELETE FROM IN_DEPTH_INFO WHERE PATIENT_ID = " + ID.toString();
         if (HandleUpdateExecution()){
-            query = "DELETE FROM BASIC_INFO WHERE PATIENT_ID = " + ID.toString();
+            query = "DELETE FROM PATIENT_PHONE_NUMBERS WHERE PATIENT_ID = " + ID.toString();
             if (HandleUpdateExecution()) {
-                return UpdateRecordFile(null, false, Name);
+                query = "SELECT PATIENT_NAME, AGE, SEX, ADDRESS, TO_CHAR(ADMISSION_DATE, '"
+                        + DateFormat + "') AS ADMISSION_DATE FROM BASIC_INFO WHERE PATIENT_ID = " + ID.toString();
+
+                if (ResultSetHandler()){
+                    try{
+                        if (resultSet != null){
+                            while(resultSet.next()){
+                                DeletePhoneNumberFromFile(
+                                        resultSet.getString("PATIENT_NAME"),
+                                        resultSet.getString("AGE"),
+                                        resultSet.getString("SEX"),
+                                        resultSet.getString("ADDRESS"),
+                                        resultSet.getString("ADMISSION_DATE")
+                                );
+                            }
+                        }
+                    }
+                    catch (SQLException e){
+                        e.printStackTrace();
+                    }
+                }
+
+                query = "DELETE FROM BASIC_INFO WHERE PATIENT_ID = " + ID.toString();
+                if (HandleUpdateExecution()) {
+                    return UpdateRecordFile(null, false, Name);
+                }
             }
         }
         return false;
@@ -731,9 +818,15 @@ public class B_Database {
      * @return ResultSet containing information.
      */
     public static ResultSet SearchInformation(String Name, String Age, String Sex, String Address){
-        query = "SELECT * FROM " +
-                "BASIC_INFO B, IN_DEPTH_INFO I " +
-                "WHERE";
+        query = "SELECT B.PATIENT_ID, B.PATIENT_NAME, B.AGE, B.SEX, B.ADDRESS, TO_CHAR(B.ADMISSION_DATE, '" + DateFormat + "') AS ADMISSION_DATE, ";
+        for (int i = 0; i < ListOfColumns.size(); ++i) {
+            query += "I." + ListOfColumns.get(i).ColumnName;
+
+            if (i != ListOfColumns.size() - 1)
+                query += ", ";
+            else
+                query += " FROM BASIC_INFO B, IN_DEPTH_INFO I WHERE B.PATIENT_ID = I.PATIENT_ID AND ";
+        }
 
         int c = 0;
         if (Name != null){
@@ -755,8 +848,10 @@ public class B_Database {
 
         if (Address != null){
             if (c > 0)  query += " AND";
-            query += " B.ADDRESS = '" + Address + "'";
+            query += " B.ADDRESS LIKE '%" + Address + "%'";
         }
+
+        query += " ORDER BY B.PATIENT_ID ASC";
 
         if (ResultSetHandler())
             return resultSet;
@@ -1002,22 +1097,7 @@ public class B_Database {
                 Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine, TempFile, Append);
             }
 
-            if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(TempFile)) {
-                Append = false;
-                do {
-                    // Read from temp file.
-                    TempLine = B_FileSystem.B_FileSystem_instance.ReadFromFileNextLine();
-
-                    // If line read isn't null then write it back to column file.
-                    if (TempLine != null)
-                        if (TempLine.length() > 2)
-                            Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine + "\n", ColumnFileName, Append);
-                        else
-                            Append = B_FileSystem.B_FileSystem_instance.WriteToFile(TempLine, ColumnFileName, Append);
-                } while (TempLine != null);
-
-                return true;
-            } else System.out.println("UpdateColumnList - Failed to setup file reader for temp");
+            return WriteFromTempFile(ColumnFileName);
         } else System.out.println("UpdateColumnList - Failed to setup file reader for columnName");
 
         return false;

@@ -5,8 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class Driver extends Application {
 

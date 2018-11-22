@@ -6,8 +6,12 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class C_SearchHandling {
     @FXML private TableView<ObservableList<String>> FX_TableView;
@@ -82,6 +86,56 @@ public class C_SearchHandling {
 
 
     @FXML private void HandleSearch(){
+        Task<Boolean> Task_SearchInformation = new Task<Boolean>() {
+            ObservableList<ObservableList<String>> RecordData = FXCollections.observableArrayList();
+            Boolean Status = false;
 
+            @Override
+            protected Boolean call() throws Exception {
+                String Name = FX_TextField_Name.getText();;
+                String Age = FX_ComboBox_Age.getSelectionModel().getSelectedItem();
+                String Sex = FX_ComboBox_Sex.getSelectionModel().getSelectedItem();
+                String Address = FX_TextField_Address.getText();
+
+                if (Name.equals("Enter Name") || Name.length() == 0)            Name = null;
+                if (Age.equals("ALL"))                                          Age = null;
+                if (Sex.equals("ALL"))                                          Sex = null;
+                if (Address.equals("Enter Address") || Address.length() == 0)   Address = null;
+
+                try{
+                    ResultSet rs = B_Database.SearchInformation(Name, Age, Sex, Address);
+                    if (rs != null){
+                        while(rs.next()){
+                            ObservableList<String> Data = FXCollections.observableArrayList();
+                            Data.add(rs.getString("PATIENT_ID"));
+                            Data.add(rs.getString("PATIENT_NAME"));
+                            Data.add(rs.getString("AGE"));
+                            Data.add(rs.getString("SEX"));
+                            Data.add(rs.getString("ADMISSION_DATE"));
+
+                            for(int i = 0; i < B_Database.ListOfColumns.size(); ++i)
+                                Data.add(rs.getString(B_Database.ListOfColumns.get(i).ColumnName));
+
+                            RecordData.add(Data);
+                        }
+
+                        Status = true;
+                    }
+                }
+                catch (SQLException e){
+
+                }
+                return Status;
+            }
+
+            @Override
+            protected void succeeded() {
+                if (Status && RecordData.size() > 0){
+                    FX_TableView.setItems(RecordData);
+                    FX_TableView.getSelectionModel().selectFirst();
+                }
+            }
+        };
+        new Thread(Task_SearchInformation).start();
     }
 }
