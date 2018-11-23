@@ -139,9 +139,9 @@ public class C_ViewInformation {
             @Override
             protected ObservableList<ObservableList<String>> call() throws Exception {
                 try{
-                    int idx = 1, max = B_Database.B_database_instance.GetTotalRecordNumber();
+                    int idx = 1, max = B_Database.GetTotalRecordNumber();
                     System.out.println(max);
-                    ResultSet rs = B_Database.B_database_instance.GetInformation(ID);
+                    ResultSet rs = B_Database.GetInformation(ID);
 
                     if (rs != null){
                         while(rs.next()){
@@ -196,7 +196,7 @@ public class C_ViewInformation {
             protected ObservableList<String> call() throws Exception {
                 String ID = FX_TableView.getSelectionModel().getSelectedItem().get(0);
                 try{
-                    ResultSet rs = B_Database.B_database_instance.GetPhoneNumbers(Integer.parseInt(ID));
+                    ResultSet rs = B_Database.GetPhoneNumbers(Integer.parseInt(ID));
 
                     if (rs != null){
                         while(rs.next()){
@@ -204,7 +204,7 @@ public class C_ViewInformation {
                         }
                         rs.close();
 
-                        rs = B_Database.B_database_instance.GetAddress(Integer.parseInt(ID));
+                        rs = B_Database.GetAddress(Integer.parseInt(ID));
                         if (rs != null){
                             rs.next();
                             Address = rs.getString("ADDRESS");
@@ -406,7 +406,7 @@ public class C_ViewInformation {
 
                 @Override
                 protected Boolean call() throws Exception {
-                    Status = B_Database.B_database_instance.DeleteRecordData(Integer.parseInt(ID), Name);
+                    Status = B_Database.DeleteRecordData(Integer.parseInt(ID), Name);
 
                     return Status;
                 }
@@ -551,7 +551,7 @@ public class C_ViewInformation {
                                     "Columns were deleted with success.",
                                     "INFORMATION"
                             );
-                            B_Database.B_database_instance.GetColumnInfoFromFile();
+                            B_Database.GetColumnInfoFromFile();
                             FX_TableView.getItems().clear();
                             FX_TableView.getColumns().clear();
                             SetUpTableColumns();

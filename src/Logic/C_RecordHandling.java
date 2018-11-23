@@ -97,7 +97,7 @@ public class C_RecordHandling {
         String Age = FX_ComboBox_Age.getSelectionModel().getSelectedItem();
         String Sex = FX_ComboBox_Sex.getSelectionModel().getSelectedItem();
         String Address = FX_TextField_Address.getText().trim();
-        String Date = B_Database.B_database_instance.dateTimeFormatter.format(FX_DatePicker_Admission.getValue());
+        String Date = B_Database.dateTimeFormatter.format(FX_DatePicker_Admission.getValue());
 
         ArrayList<E_ColumnInfo> Basic = new ArrayList<>(), Indepth = new ArrayList<>();
         Basic.add(new E_ColumnInfo("PATIENT_NAME", Name, 1));
@@ -121,7 +121,7 @@ public class C_RecordHandling {
             Indepth.add(new E_ColumnInfo(column.ColumnName, Value, column.ColumnType));
         }
 
-        if(B_Database.B_database_instance.InsertInformation(Basic, Indepth, true)){
+        if(B_Database.InsertInformation(Basic, Indepth, true)){
             ArrayList<String> PhoneNumbers = new ArrayList<>();
 
             for(int i = 0; i < FX_ListView_PhoneNo.getItems().size(); ++i){
@@ -130,7 +130,7 @@ public class C_RecordHandling {
             }
 
             if (PhoneNumbers.size() > 0){
-                B_Database.B_database_instance.InsertPhoneNumbers(Basic, PhoneNumbers, true);
+                B_Database.InsertPhoneNumbers(Basic, PhoneNumbers, true);
             }
 
             return true;
@@ -179,7 +179,7 @@ public class C_RecordHandling {
         String Age = FX_ComboBox_Age.getSelectionModel().getSelectedItem();
         String Sex = FX_ComboBox_Sex.getSelectionModel().getSelectedItem();
         String Address = FX_TextField_Address.getText().trim();
-        String Date = B_Database.B_database_instance.dateTimeFormatter.format(FX_DatePicker_Admission.getValue());
+        String Date = B_Database.dateTimeFormatter.format(FX_DatePicker_Admission.getValue());
 
         EditColumnInfo.add(new E_ColumnInfo("PATIENT_NAME", Name, 1));
         EditColumnInfo.add(new E_ColumnInfo("AGE", Age, 2));
@@ -197,7 +197,7 @@ public class C_RecordHandling {
         }
 
         try {
-            return B_Database.B_database_instance.UpdateInformation(ID, EditColumnInfo);
+            return B_Database.UpdateInformation(ID, EditColumnInfo);
         } catch (Defined_Exceptions e){
             e.printStackTrace();
         }

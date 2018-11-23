@@ -100,7 +100,7 @@ public class C_DeleteColumn {
         boolean status = false;
 
         for(int i = 0; i < FX_ListView_DeleteColumns.getItems().size(); ++i){
-            status = B_Database.B_database_instance.DropColumn(FX_ListView_DeleteColumns.getItems().get(i).ColumnName);
+            status = B_Database.DropColumn(FX_ListView_DeleteColumns.getItems().get(i).ColumnName);
         }
 
         return status;

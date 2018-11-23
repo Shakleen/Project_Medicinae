@@ -126,7 +126,7 @@ public class C_InsertColumn {
                     int ColumnSize = ((int) FX_Slider_ColumnSize.getValue());
 
                     if (size == 0) {
-                        B_Database.B_database_instance.AddColumn(ColumnName, 1, ColumnSize, true);
+                        B_Database.AddColumn(ColumnName, 1, ColumnSize, true);
                     }
                     else {
                         ArrayList<String> DomainValues = new ArrayList<>();
@@ -134,7 +134,7 @@ public class C_InsertColumn {
                             DomainValues.add(FX_ListView_TextFields.getItems().get(i).getText().toString());
                         }
 
-                        B_Database.B_database_instance.AddColumnWithCheck(ColumnName, 1, ColumnSize, DomainValues, true);
+                        B_Database.AddColumnWithCheck(ColumnName, 1, ColumnSize, DomainValues, true);
                     }
 
                     return new E_ColumnInfo(ColumnName, null, 1);
@@ -143,10 +143,10 @@ public class C_InsertColumn {
                     String LowerLimit = FX_TextField_LowerLimit.getText().trim().toString();
 
                     if (UpperLimit.length() == 0 || LowerLimit.length() == 0){
-                        B_Database.B_database_instance.AddColumn(ColumnName, 2, 0, true);
+                        B_Database.AddColumn(ColumnName, 2, 0, true);
                     }
                     else {
-                        B_Database.B_database_instance.AddColumnWithCheck(ColumnName, 2, Integer.parseInt(UpperLimit), Integer.parseInt(LowerLimit), true);
+                        B_Database.AddColumnWithCheck(ColumnName, 2, Integer.parseInt(UpperLimit), Integer.parseInt(LowerLimit), true);
                     }
 
                     return new E_ColumnInfo(ColumnName, null, 2);

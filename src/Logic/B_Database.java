@@ -7,35 +7,38 @@ import java.util.ArrayList;
 
 /**
  * <h> Class for handling data base portion of the application </h>
- * <p>The purpose of this class is to handle database portion of the application. It stores
- * and retrieves information from the database.</p>
+ * <p>This is the main backend of the application. It handles the storage of data. The insertion, deletion and search is extremely efficient
+ * in the database as compared to file system. That is why the application mainly depends on this class to retrieve and manipulate data.
+ * A backup of the data is kept in the file system in case of failure. But main interaction is done using this class. The class mainly deals
+ * with 2 types of interactions. Interaction with Table structure i.e. with columns and interaction with records. Whenever new data is added
+ * or old data is manipulated (Updated or deleted) appropriate file systems are also modified to reflect the manipulation.</p>
  * @author Shakleen Ishfar
  * @version 1.0.0.0
  * @since 05/11/2018
  */
 public class B_Database {
-    private static Connection connection;  // Connection type object to get connection using driver.
-    private static Statement statement;    // Statement type object to execute DDL and DML queries.
-    private static String query;           // Holds query for execution by statement object.
-    private static String values;          // Used to store column values.
-    private static ResultSet resultSet;    // ResultSet type object to return database tables.
-    private static final String ClassName = "oracle.jdbc.OracleDriver";
-    private static final String dbURL = "jdbc:oracle:thin:@localhost:1521:xe";
-    public static final String ColumnFileName = "ColumnNames.txt";        // Name of the file where column information is kept.
-    public static final String RecordFileName = "A.txt";        // Name of the file where column information is kept.
-    public static final String ContactFileName = "AC.txt";        // Name of the file where column information is kept.
-    private static final String WordSeparator = "#";
-    private static final String LineSeparator = "|";
-    private static final String Seperator = WordSeparator + LineSeparator + '\n' + WordSeparator;
-    public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-    private static final String DateFormat = "YYYY/MM/DD";
-    public static ArrayList<E_ColumnInfo> ListOfColumns;
-
-    // This is a static instance of the class. It will be the only object that will handle the communication with the database.
-    public static B_Database B_database_instance = new B_Database();
+    private static Connection connection;                                           // Connection type object to get connection using driver.
+    private static Statement statement;                                             // Statement type object to execute DDL and DML queries.
+    private static String query;                                                    // Holds query for execution by statement object.
+    private static String values;                                                   // Used to store column values.
+    private static ResultSet resultSet;                                             // ResultSet type object to return database tables.
+    private static final String ClassName = "oracle.jdbc.OracleDriver";             // The class name to search in OJDBC.jar
+    private static final String dbURL = "jdbc:oracle:thin:@localhost:1521:xe";      // The url of the database.
+    private static final String WordSeparator = "#";                                // Separates two attribute values in the file.
+    private static final String LineSeparator = "|";                                // Separates two different record data in file.
+    private static final String Separator =
+            WordSeparator + LineSeparator + '\n' + WordSeparator;
+    private static final String DateFormat = "YYYY/MM/DD";                          // The universal data format that is used in the dbms.
+    public static String ColumnFileName;                                            // Name of the file where column information is kept.
+    public static String RecordFileName;                                            // Name of the file where column information is kept.
+    public static String ContactFileName;                                           // Name of the file where column information is kept.
+    public static final DateTimeFormatter dateTimeFormatter =
+            DateTimeFormatter.ofPattern("yyyy/MM/dd");                              // The universal data format that is used in the dbms.
+    public static ArrayList<E_ColumnInfo> ListOfColumns;                            // An array list that keeps all the names of the columns.
 
     /**
-     * Constructor.
+     * Constructor. Initializes connection variable to be null.
+     * The constructor is private. Meaning another instance of this class can never be created.
      */
     private B_Database (){
         connection = null;
@@ -49,12 +52,15 @@ public class B_Database {
      */
     public static boolean LogIn(String Name, String Password){
         try {
-            Class.forName(ClassName);
-            connection = DriverManager.getConnection(dbURL, Name, Password);
-            if(connection != null){
-                statement = connection.createStatement();
-                SetupDatabaseForUsage();
-                return true;
+            Class.forName(ClassName);                                               // Get the appropriate class pointed to by ClassName String.
+            connection = DriverManager.getConnection(dbURL, Name, Password);        // Create a connection using the passed Name and Password.
+            if(connection != null){                                                 // If connection succeeds then do the following.
+                statement = connection.createStatement();                           // Create a statement for executing queries and updates.
+                ColumnFileName = Name + "ColumnNames.txt";                          // Set the column file name for the user.
+                RecordFileName = Name + "RecordData.txt";                           // Set the record file name for the user.
+                ContactFileName = Name + "RecordContactData.txt";                   // Set the contact file name for the user.
+                SetupDatabaseForUsage();                                            // Setup the database for usage.
+                return true;                                                        // Return true if everything up-to now has succeeded.
             }
         }
         catch (SQLException | ClassNotFoundException e){
@@ -65,92 +71,100 @@ public class B_Database {
 
 
     /**
-     * Method for checking and setting up the database.
+     * Method checks the status of the database. If the database has no table structure. then it creates them from scratch.
+     *
      * @return true if successful. false otherwise.
      */
-    private static boolean SetupDatabaseForUsage(){
+    private static void SetupDatabaseForUsage(){
         try{
-            boolean BASIC_INFO = false, IN_DEPTH_INFO = false;
+            /*
+             * This portion checks the database for the table structure.
+             * First it searches the database for the BASIC_INFO Table.
+             * Second, it searches for the database for the IN_DEPTH_INFO table.
+             * If they don'y exist they are created before proceeding.
+             */
+            boolean BASIC_INFO, IN_DEPTH_INFO;
             ResultSet rs = statement.executeQuery("SELECT TABLE_NAME FROM USER_TABLES WHERE TABLE_NAME LIKE 'BASIC_INFO'");
             BASIC_INFO = rs.next();
             rs = statement.executeQuery("SELECT TABLE_NAME FROM USER_TABLES WHERE TABLE_NAME LIKE 'IN_DEPTH_INFO'");
             IN_DEPTH_INFO = rs.next();
 
+            // Checks if the appropriate files exists for creating the table structure and record restoration.
             CheckAndDownload();
 
+            // Initializes the ArrayList where we shall store the column names for future usage.
             ListOfColumns = new ArrayList<>();
+
+            // Fetches the column information from the file which contains column information.
             GetColumnInfoFromFile();
 
-            if (BASIC_INFO == false && IN_DEPTH_INFO == false)  BASIC_INFO = IN_DEPTH_INFO = UpdateDatabase();
-        } catch (Defined_Exceptions | SQLException de){
+            if (BASIC_INFO == false && IN_DEPTH_INFO == false)
+                BASIC_INFO = IN_DEPTH_INFO = ReconstructDatabaseFromFiles();
+        }
+        catch (SQLException de){
 
         }
-        return false;
     }
 
 
     /**
-     * Method that checks if the files on disk are corrupted and requires download from cloud.
+     * Method checks the existence of the files necessary for the application to work.
+     * When it doesn't find the files it will check the online backup for the files.
      */
     private static void CheckAndDownload(){
-        if (!new File(ColumnFileName).exists()){
-            B_Network.DownloadFromDrive(ColumnFileName);
-        }
-        if (!new File(RecordFileName).exists()){
-            B_Network.DownloadFromDrive(RecordFileName);
-        }
-        if (!new File(ContactFileName).exists()){
-            B_Network.DownloadFromDrive(ContactFileName);
-        }
+        if (!new File(ColumnFileName).exists()) B_Network.DownloadFromDrive(ColumnFileName);
+        if (!new File(RecordFileName).exists()) B_Network.DownloadFromDrive(RecordFileName);
+        if (!new File(ContactFileName).exists()) B_Network.DownloadFromDrive(ContactFileName);
     }
 
 
     /**
-     * Used to update the information stored in the database from the sql file.
-     * Used only when the application had data stored before an unexpected failure.
-     * @throws Defined_Exceptions an exception is thrown when no account is logged in.
+     * Method for reconstructing the database and repopulating it with information stored in the files.
+     * Is called when the oracle database had faced an error and had to be reinstalled or somehow deleted the users
+     * information.
      * @return true if successful, false otherwise.
      */
-    public static boolean UpdateDatabase() throws Defined_Exceptions{
-        // Checks to see if there is a connection before proceeding.
-        if (connection == null) throw new Defined_Exceptions("SQL_ACCOUNT_ERROR");
+    private static boolean ReconstructDatabaseFromFiles(){
+        /*
+         * The method does the following steps. If a step fails it does not move onto the next step.
+         * Step 1: It creates the table structure.
+         * Step 2: It creates the columns with the information of the columns stored in the column file.
+         * Step 3: It inserts the records into the table from the information stored in the record file.
+         * Step 4: It inserts the contact of the records into the table.
+         */
+        try {
+            if (CreateTableStructure()) {
+                if (SetupTableColumnsFromFile()) {
+                    if (RepopulateDatabaseWithRecords())
+                        return GetPhoneNumbersFromFile();
+                    System.out.println("ReconstructDatabaseFromFiles - Couldn't add records to table!");
+                } else System.out.println("ReconstructDatabaseFromFiles - Couldn't create columns!");
+            } else System.out.println("ReconstructDatabaseFromFiles - Couldn't execute table creation statements!");
+        }
+        catch (Defined_Exceptions e){
 
-        // Run table and column related sql statements from file
-        if (CreateTableStructure()) {
-            // Add the columns from column name file.
-            if (SetupTableColumnsFromFile()) {
-                // Run record related sql statements from file
-                if (UpdateRecords())
-                    return GetPhoneNumbersFromFile();
-                System.out.println("UpdateDatabase - Couldn't add records to table!");
-            } else System.out.println("UpdateDatabase - Couldn't create columns!");
-        } else System.out.println("UpdateDatabase - Couldn't execute table creation statements!");
-
+        }
         return false;
     }
 
 
     /**
-     * Method to get the column information from file.
+     * Method handles repopulating the table with appropriate columns.
+     * It fetches column information from the column file and inserts them into the dbms table.
      * @return true if successful, false otherwise.
      */
     private static boolean SetupTableColumnsFromFile() throws Defined_Exceptions{
-        if (connection == null)
-            return false;
+        E_ColumnInfo column;
+        int n = ListOfColumns.size();
 
-        for(int i = 0; i < ListOfColumns.size(); ++i){
-            E_ColumnInfo column = ListOfColumns.get(i);
+        for(int i = 0; i < n; ++i){
+            column = ListOfColumns.get(i);
 
-            switch (column.ColumnType){
-                case 1:
-                    AddColumnWithCheck(column.ColumnName, column.ColumnType, column.ColumnSize, column.DomainValues, false);
-                     break;
-                case 2:
-                    AddColumnWithCheck(column.ColumnName, column.ColumnType, column.UpperLimit, column.LowerLimit, false);
-                    break;
-                case 3:// TODO Date
-                    break;
-            }
+            // Column type 1 means that the column is of String (VARCHAR2) type.
+            if (column.ColumnType == 1) AddColumnWithCheck(column.ColumnName, column.ColumnType, column.ColumnSize, column.DomainValues, false);
+
+            // Column type 2 means that the column is of Numerical (NUMBER) type.
+            else AddColumnWithCheck(column.ColumnName, column.ColumnType, column.UpperLimit, column.LowerLimit, false);
         }
 
         return true;
@@ -162,13 +176,12 @@ public class B_Database {
      * @return true if successful, false otherwise.
      */
     public static boolean GetColumnInfoFromFile(){
-        String ColumnName = null, LineRead = null, temp = null;
+        String ColumnName = null, LineRead = null;
         Integer ColumnType = null, ColumnSize = null;
         ArrayList<String> DomainValues = null;
         boolean EndOfLine = false;
 
-        // Open column file for reading.
-        if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(ColumnFileName, "#")) {
+        if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(ColumnFileName, WordSeparator)) {
             ListOfColumns.clear();
 
             while (true) {
@@ -181,52 +194,41 @@ public class B_Database {
                 ColumnType = B_FileSystem.B_FileSystem_instance.ReadFromFileNextInt();
                 B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
 
-                // Getting parameters
-                switch (ColumnType) {
-                    // Column is of type VARCHAR2
-                    case 1:
-                        // Get column size for VARCHAR2
-                        ColumnSize = B_FileSystem.B_FileSystem_instance.ReadFromFileNextInt();
-                        System.out.println("Name = " + ColumnName + " type = " + ColumnType + " Size = " + ColumnSize);
+                // Taking appropriate action based on type.
+                if (ColumnType == 1){
+                    // Get column size for VARCHAR2
+                    ColumnSize = B_FileSystem.B_FileSystem_instance.ReadFromFileNextInt();
+                    B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+
+                    // New array list for storing domain values gotten from file.
+                    DomainValues = new ArrayList<>();
+
+                    // Variable for keeping checking condition value of whether end of file was reached.
+                    EndOfLine = false;
+
+                    do {
+                        // Read the line from file.
+                        LineRead = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
                         B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
 
-                        // New array list for storing domain values gotten from file.
-                        DomainValues = new ArrayList<>();
+                        // Check if the line read has the character full stop indicating end of line.
+                        EndOfLine = LineRead.contains("|");
+                        if (EndOfLine) break;
 
-                        // Variable for keeping checking condition value of whether end of file was reached.
-                        EndOfLine = false;
+                        // If the line read is not null and is greater than 0 size add to domain.
+                        if (LineRead != null) if (LineRead.length() > 0) DomainValues.add(LineRead);
+                    } while (LineRead != null);
 
-                        do {
-                            // Read the line from file.
-                            LineRead = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
-                            B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
-
-                            // Check if the line read has the character full stop indicating end of line.
-                            EndOfLine = LineRead.contains("|");
-                            if (EndOfLine) break;
-
-                            // If the line read is not null and is greater than 0 size add to domain.
-                            if (LineRead != null) if (LineRead.length() > 0) DomainValues.add(LineRead);
-                        } while (LineRead != null);
-
-                        ListOfColumns.add(new E_ColumnInfo(ColumnName, ColumnSize, ColumnType, true, DomainValues));
-                        break;
-
-                    // Column is of type number. So constraint parameters will be only Upper and lower limit.
-                    case 2:
-                        Integer LowerLimit = B_FileSystem.B_FileSystem_instance.ReadFromFileNextInt();
-                        B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
-                        Integer UpperLimit = B_FileSystem.B_FileSystem_instance.ReadFromFileNextInt();
-                        B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
-                        B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
-                        B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
-                        System.out.println("Name = " + ColumnName + " type = " + ColumnType + " U = " + UpperLimit + " L = " + LowerLimit);
-                        ListOfColumns.add(new E_ColumnInfo(ColumnName, ColumnType, true, UpperLimit, LowerLimit));
-                        break;
-
-                    // TODO Column is of type Date
-                    case 3:
-                        break;
+                    ListOfColumns.add(new E_ColumnInfo(ColumnName, ColumnSize, ColumnType, true, DomainValues));
+                }
+                else {
+                    Integer LowerLimit = B_FileSystem.B_FileSystem_instance.ReadFromFileNextInt();
+                    B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+                    Integer UpperLimit = B_FileSystem.B_FileSystem_instance.ReadFromFileNextInt();
+                    B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+                    B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                    B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+                    ListOfColumns.add(new E_ColumnInfo(ColumnName, ColumnType, true, UpperLimit, LowerLimit));
                 }
             }
 
@@ -238,7 +240,7 @@ public class B_Database {
 
 
     /**
-     * Method for creating table structure.
+     * Method for creating table structure. Creates 3 tables. BASIC_INFO, IN_DEPTH_INFO and PATIENT_PHONE_NUMBERS.
      * @return true when success otherwise false.
      */
     private static boolean CreateTableStructure(){
@@ -255,23 +257,23 @@ public class B_Database {
                     "CONSTRAINT UN_PATIENT UNIQUE(PATIENT_NAME, AGE, SEX, ADDRESS, ADMISSION_DATE)" +
                 ")";
 
-        if (ExecuteStatement(query, 0)){
+        if (ExecuteStatement()){
             query = "CREATE SEQUENCE SEQ_PATIENT_ID MINVALUE 1 START WITH 1 INCREMENT BY 1 CACHE 10";
 
-            if (ExecuteStatement(query, 0)){
+            if (ExecuteStatement()){
                 query = "CREATE TABLE PATIENT_PHONE_NUMBERS(" +
                             "PATIENT_ID NUMBER," +
                             "PHONE_NUMBER VARCHAR2(20)," +
                             "CONSTRAINT FK_PATIENT_ID FOREIGN KEY (PATIENT_ID) REFERENCES BASIC_INFO" +
                         ")";
 
-                if (ExecuteStatement(query, 0)){
+                if (ExecuteStatement()){
                     query = "CREATE TABLE IN_DEPTH_INFO(" +
                                 "PATIENT_ID NUMBER," +
                                 "CONSTRAINT FK_IND_PATIENT_ID FOREIGN KEY (PATIENT_ID) REFERENCES BASIC_INFO (PATIENT_ID)" +
                             ")";
 
-                    return ExecuteStatement(query, 0);
+                    return ExecuteStatement();
                 }
             }
         }
@@ -281,48 +283,47 @@ public class B_Database {
 
 
     /**
-     * Method for updating record from file.
+     * Method for repopulating DBMS with the records from file.
      * @return true if successful, false otherwise.
      */
-    private static boolean UpdateRecords(){
+    private static boolean RepopulateDatabaseWithRecords(){
         if (B_FileSystem.B_FileSystem_instance.SetUpFileReader(RecordFileName, WordSeparator)){
-                String Name = null, Value = null;
-                Integer Type = null;
-                Boolean Break = false;
+            String Name = null, Value = null;
+            Integer Type = null;
+            Boolean Break = false;
+            ArrayList<E_ColumnInfo> BasicColumnValues, InDepthColumnValues;
 
-                while(true) {
-                    ArrayList<E_ColumnInfo> BasicColumnValues = new ArrayList<>();
-                    ArrayList<E_ColumnInfo> InDepthColumnValues = new ArrayList<>();
+            while(true) {
+                BasicColumnValues = new ArrayList<>();
+                InDepthColumnValues = new ArrayList<>();
 
-                    for (int i = 1; ; ++i) {
-                        // Reading the column name
-                        Name = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
-                        if (Name == null) {Break = true; break;}
-                        else if (Name.contains(LineSeparator)) break;
-                        B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+                for (int i = 1; ; ++i) {
+                    // Reading the column name
+                    Name = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                    if (Name == null) {Break = true; break;}
+                    else if (Name.contains(LineSeparator)) break;
+                    B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
 
-                        // Reading the column value
-                        Value = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
-                        B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+                    // Reading the column value
+                    Value = B_FileSystem.B_FileSystem_instance.ReadFromFileNext();
+                    B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
 
-                        // Reading the column type
-                        Type = B_FileSystem.B_FileSystem_instance.ReadFromFileNextInt();
-                        B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
+                    // Reading the column type
+                    Type = B_FileSystem.B_FileSystem_instance.ReadFromFileNextInt();
+                    B_FileSystem.B_FileSystem_instance.FileReaderSkipDelimeter();
 
-                        System.out.println(Name + " " + Value + " " + Type);
-
-                        // Add to appropriate table column
-                        if (i <= 5) BasicColumnValues.add(new E_ColumnInfo(Name, Value, Type));
-                        else InDepthColumnValues.add(new E_ColumnInfo(Name, Value, Type));
-                    }
-
-                    // Insert record.
-                    if (Break == false) InsertInformation(BasicColumnValues, InDepthColumnValues, false);
-                    else                break;
+                    // Add to appropriate table column
+                    if (i <= 5) BasicColumnValues.add(new E_ColumnInfo(Name, Value, Type));
+                    else InDepthColumnValues.add(new E_ColumnInfo(Name, Value, Type));
                 }
 
-                return true;
+                // Insert record.
+                if (Break == false) InsertInformation(BasicColumnValues, InDepthColumnValues, false);
+                else                break;
             }
+
+            return true;
+        }
 
         return false;
     }
@@ -383,7 +384,6 @@ public class B_Database {
         // No column information given exception
         else if (Columns.size() == 0)   throw new Defined_Exceptions("ZERO_COLUMNS_FOR_RECORD");
 
-        // SELECT LAST_NUMBER FROM ALL_SEQUENCES WHERE SEQUENCE_NAME = 'SEQ_PATIENT_ID' TODO
         if (Type) {
             query = "INSERT INTO BASIC_INFO (PATIENT_ID, ";
             values = ") VALUES (SEQ_PATIENT_ID.NEXTVAL, ";
@@ -391,6 +391,7 @@ public class B_Database {
             query = "INSERT INTO IN_DEPTH_INFO (PATIENT_ID, ";
             values = ") VALUES ((SELECT MAX(PATIENT_ID) FROM BASIC_INFO), ";
         }
+
         InsertQueryBuilder(Columns);
         return HandleUpdateExecution();
     }
@@ -409,8 +410,9 @@ public class B_Database {
         else if (PhoneNumbers.size() == 0)      throw new Defined_Exceptions("ZERO_COLUMNS_FOR_RECORD");
 
         boolean con = false;
+        int n = PhoneNumbers.size();
         String LineToWrite = "";
-        for (int i = 0; i < PhoneNumbers.size(); ++i) {
+        for (int i = 0; i < n; ++i) {
             query = "INSERT INTO PATIENT_PHONE_NUMBERS (PATIENT_ID, PHONE_NUMBER) VALUES" +
                     "(" +
                     ID.toString() + ", " +
@@ -452,13 +454,12 @@ public class B_Database {
                     "SEX = '" + Sex + "' AND " +
                     "ADDRESS = '" + Address + "' AND " +
                     "ADMISSION_DATE = TO_DATE('" + AdmissionDate + "', '" + DateFormat + "')";
-            ResultSet rs = statement.executeQuery(query);
-            if (rs.next()){
-                ID = rs.getInt("PATIENT_ID");
 
-                if (ID >= 1){
-                    return InsertPhoneNumbers(ID, PhoneNumbers, WriteCondition);
-                }
+            ResultSetHandler();
+
+            if (resultSet.next()){
+                ID = resultSet.getInt("PATIENT_ID");
+                if (ID >= 1) return InsertPhoneNumbers(ID, PhoneNumbers, WriteCondition);
             }
         } catch (SQLException | Defined_Exceptions e){
             e.printStackTrace();
@@ -475,16 +476,16 @@ public class B_Database {
     private static boolean WritePhoneNumbersToFile(Integer ID, String PhoneNumbers){
         try {
             query = "SELECT PATIENT_NAME, AGE, SEX, ADDRESS, TO_CHAR(ADMISSION_DATE, '" + DateFormat + "') AS ADMISSION_DATE FROM BASIC_INFO WHERE PATIENT_ID = " + ID.toString();
-            ResultSet rs = statement.executeQuery(query);
+            ResultSetHandler();
             String LineToWrite = "";
 
-            if (rs.next()) {
+            if (resultSet.next()) {
                 // PATIENT_NAME, AGE, SEX, ADDRESS, ADMISSION_DATE
-                String Name = rs.getString("PATIENT_NAME");
-                String Age = rs.getString("AGE");
-                String Sex = rs.getString("SEX");
-                String Address = rs.getString("ADDRESS");
-                String AdmissionDate = rs.getString("ADMISSION_DATE");
+                String Name = resultSet.getString("PATIENT_NAME");
+                String Age = resultSet.getString("AGE");
+                String Sex = resultSet.getString("SEX");
+                String Address = resultSet.getString("ADDRESS");
+                String AdmissionDate = resultSet.getString("ADMISSION_DATE");
 
                 LineToWrite += Name + WordSeparator;
                 LineToWrite += Age + WordSeparator;
@@ -545,10 +546,9 @@ public class B_Database {
                             "ADDRESS = '" + Address + "' AND " +
                             "ADMISSION_DATE = TO_DATE('" + AdmissionDate + "', '" + DateFormat + "')";
 
-                    System.out.println(query);
-                    ResultSet rs = statement.executeQuery(query);
-                    if (rs.next()){
-                        ID = rs.getInt("PATIENT_ID");
+                    ResultSetHandler();
+                    if (resultSet.next()){
+                        ID = resultSet.getInt("PATIENT_ID");
                         InsertPhoneNumbers(ID, PhoneNumbers, false);
                     }
                 }
@@ -607,10 +607,7 @@ public class B_Database {
                 boolean WriteCondition = ReadName.equals(Name) && ReadAge.equals(Age) && ReadSex.equals(Sex) &&
                         ReadAddress.equals(Address) && ReadAdmissionDate.equals(AdmissionDate);
 
-                System.out.println("WRITE CONDITION IS " + WriteCondition + " FOR NAME = " + ReadName);
-                if (!WriteCondition){
-                    Append = B_FileSystem.B_FileSystem_instance.WriteToFile(LineToWrite, "Temp.txt", Append);
-                }
+                if (!WriteCondition) Append = B_FileSystem.B_FileSystem_instance.WriteToFile(LineToWrite, "Temp.txt", Append);
             }
 
             return WriteFromTempFile(ContactFileName);
@@ -638,9 +635,8 @@ public class B_Database {
         if (HandleUpdateExecution()){
             query = "UPDATE IN_DEPTH_INFO SET ";
             LoopThrough(Columns, 5, Columns.size(), ID);
-            if(HandleUpdateExecution()){
+            if(HandleUpdateExecution())
                 return UpdateRecordFile(Columns, true, Columns.get(0).ColumnValue);
-            }
         }
 
         return false;
@@ -893,14 +889,12 @@ public class B_Database {
 
     /**
      * Used to execute statements directly read from file system.
-     * @param Exec the statement to execute.
-     * @param type if table type then 1, if record type then 2.
      * @return true if successful. False otherwise.
      */
-    public static boolean ExecuteStatement(String Exec, int type){
+    public static boolean ExecuteStatement(){
         try{
-            System.out.println("From ExeQur: " + Exec);
-            statement.execute(Exec);
+            System.out.println("From ExeQur: " + query);
+            statement.execute(query);
             return true;
         } catch (SQLException e){
             e.printStackTrace();
@@ -948,9 +942,9 @@ public class B_Database {
         }
 
         // This is to write the column information back to the file
-        if (ExecuteStatement(query, 0)) {
+        if (ExecuteStatement()) {
             if (WriteCondition) {
-                if(B_FileSystem.B_FileSystem_instance.WriteToFile(ColumnName + WordSeparator + ColumnType + Seperator, ColumnFileName, true))
+                if(B_FileSystem.B_FileSystem_instance.WriteToFile(ColumnName + WordSeparator + ColumnType + Separator, ColumnFileName, true))
                     return true;
                 else System.out.println("AddColumn - Writing to file failed!");
             } else return true;
@@ -981,9 +975,9 @@ public class B_Database {
                     "(" + ColumnName + " >= " + LowerBound.toString() + " AND " + ColumnName + " <= " + UpperBound.toString() + ")";
 
             // This is to write the column information back to the file
-            if (ExecuteStatement(query, 0))
+            if (ExecuteStatement())
                 if (WriteCondition)
-                    return B_FileSystem.B_FileSystem_instance.WriteToFile(ColumnName + WordSeparator + ColumnType + WordSeparator + LowerBound + WordSeparator + UpperBound + Seperator, ColumnFileName, true);
+                    return B_FileSystem.B_FileSystem_instance.WriteToFile(ColumnName + WordSeparator + ColumnType + WordSeparator + LowerBound + WordSeparator + UpperBound + Separator, ColumnFileName, true);
                 return true;
         }
 
@@ -1023,9 +1017,9 @@ public class B_Database {
             }
 
             // This is to write the column information back to the file
-            if (ExecuteStatement(query, 0))
+            if (ExecuteStatement())
                 if (WriteCondition){
-                    if (B_FileSystem.B_FileSystem_instance.WriteToFile(ColumnName + WordSeparator + ColumnType + WordSeparator + ColumnSize + domain  + Seperator, ColumnFileName, true))
+                    if (B_FileSystem.B_FileSystem_instance.WriteToFile(ColumnName + WordSeparator + ColumnType + WordSeparator + ColumnSize + domain  + Separator, ColumnFileName, true))
                         return true;
                     else System.out.println("AddColumnWithCheck - Failed to write to file!");
                 } else return true;
@@ -1043,7 +1037,7 @@ public class B_Database {
      */
     public static boolean DropColumn(String ColumnName){
         query = "ALTER TABLE IN_DEPTH_INFO DROP COLUMN " + ColumnName;
-        boolean con = ExecuteStatement(query, 0);
+        boolean con = ExecuteStatement();
 
         if (con){
             // If dropping column was successful then update the column list file.
@@ -1063,7 +1057,7 @@ public class B_Database {
      */
     public static boolean DropColumnWithConstraint(String ColumnName){
         query = "ALTER TABLE IN_DEPTH_INFO DROP CONSTRAINT CHK_IND_" + ColumnName;
-        if (ExecuteStatement(query, 0)){
+        if (ExecuteStatement()){
             if(DropColumn(ColumnName)) return true;
             else System.out.println("Failed to drop constraint!!!!");
         } else {
