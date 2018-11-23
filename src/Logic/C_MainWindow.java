@@ -1,11 +1,16 @@
 package Logic;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+
+import java.util.Optional;
 
 public class C_MainWindow {
     @FXML private ImageView FX_ImageView_ViewInfo;
@@ -35,6 +40,8 @@ public class C_MainWindow {
                 );
             }
         });
+
+        HandleLogIn();
     }
 
 
@@ -65,5 +72,48 @@ public class C_MainWindow {
         FX_ImageView_Exit.setFitHeight(Height);
         FX_ImageView_Exit.setFitWidth(Width);
         FX_ImageView_Exit.setPreserveRatio(PreserveRatio);
+    }
+
+
+    /**
+     * Handles log in process.
+     */
+    private void HandleLogIn(){
+        boolean Status = false, con = false;
+        C_LogInDialog c_logInDialog = null;
+        Optional<ButtonType> result = null;
+
+        while(!Status) {
+            con = B_DrawWindows.B_DrawWindows_instance.DrawDialog(
+                    "FXML_LogInDialog.fxml",
+                    "Log in to your account",
+                    "Please log in to your account to proceed",
+                    null
+            );
+
+            if (con) {
+                c_logInDialog = B_DrawWindows.getFxmlLoader().getController();
+                result = B_DrawWindows.getDialog().showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    Status = c_logInDialog.HandleLogIn();
+
+                    if (Status == false) {
+                        B_DrawWindows.B_DrawWindows_instance.DrawAlert(
+                                "Failed",
+                                "Log in failed",
+                                "Invalid Username and/or password",
+                                "ERROR"
+                        );
+                    }
+                }
+                else if (result.isPresent() && result.get() == ButtonType.CANCEL){
+                    break;
+                }
+            }
+        }
+
+        if (!Status){
+            Platform.exit();
+        }
     }
 }

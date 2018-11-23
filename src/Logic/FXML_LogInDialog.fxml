@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+<DialogPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Logic.C_LogInDialog"
+            prefHeight="200.0" prefWidth="400.0">
+
+    <content>
+        <HBox>
+            <VBox>
+                <Label text="User Name">
+                    <VBox.margin>
+                        <Insets top="10" bottom="10"/>
+                    </VBox.margin>
+                </Label>
+                <Label text="Password">
+                    <VBox.margin>
+                        <Insets top="10" bottom="10"/>
+                    </VBox.margin>
+                </Label>
+                <HBox.margin>
+                    <Insets left="10" right="10"/>
+                </HBox.margin>
+            </VBox>
+
+            <VBox>
+                <TextField fx:id="FX_TextField_UserName" text="Enter User Name">
+                    <VBox.margin>
+                        <Insets top="10" bottom="10"/>
+                    </VBox.margin>
+                </TextField>
+                <PasswordField fx:id="FX_PasswordField" text="Enter Password">
+                    <VBox.margin>
+                        <Insets top="10" bottom="10"/>
+                    </VBox.margin>
+                </PasswordField>
+                <HBox.margin>
+                    <Insets left="10" right="10"/>
+                </HBox.margin>
+            </VBox>
+        </HBox>
+    </content>
+</DialogPane>

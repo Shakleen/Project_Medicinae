@@ -19,6 +19,8 @@ public class B_Database {
     private static String query;           // Holds query for execution by statement object.
     private static String values;          // Used to store column values.
     private static ResultSet resultSet;    // ResultSet type object to return database tables.
+    private static final String ClassName = "oracle.jdbc.OracleDriver";
+    private static final String dbURL = "jdbc:oracle:thin:@localhost:1521:xe";
     public static final String ColumnFileName = "ColumnNames.txt";        // Name of the file where column information is kept.
     public static final String RecordFileName = "A.txt";        // Name of the file where column information is kept.
     public static final String ContactFileName = "AC.txt";        // Name of the file where column information is kept.
@@ -30,28 +32,35 @@ public class B_Database {
     public static ArrayList<E_ColumnInfo> ListOfColumns;
 
     // This is a static instance of the class. It will be the only object that will handle the communication with the database.
-    public static B_Database B_database_instance = new B_Database("ishrak", "dragonsword05");
+    public static B_Database B_database_instance = new B_Database();
 
     /**
-     * Constructor for XEbase class objects. Creates connection with database.
-     * By default 'classname' will be selected as DEMOCLASS and 'sectionname' as DEMOSECTION.
-     * @param name String Username for the database account
-     * @param password String Password that is allocated to the user
+     * Constructor.
      */
-    private B_Database (String name, String password){
+    private B_Database (){
         connection = null;
-        try{
-            Class.forName("oracle.jdbc.OracleDriver");
-            String dbURL = "jdbc:oracle:thin:@localhost:1521:xe";
-            connection = DriverManager.getConnection(dbURL, name, password);
+    }
+
+    /**
+     * Method for logging in.
+     * @param Name User name
+     * @param Password password
+     * @return true if successful, false otherwise.
+     */
+    public static boolean LogIn(String Name, String Password){
+        try {
+            Class.forName(ClassName);
+            connection = DriverManager.getConnection(dbURL, Name, Password);
             if(connection != null){
                 statement = connection.createStatement();
                 SetupDatabaseForUsage();
+                return true;
             }
         }
-        catch (ClassNotFoundException | SQLException ex){
-            ex.printStackTrace();
+        catch (SQLException | ClassNotFoundException e){
+            e.printStackTrace();
         }
+        return false;
     }
 
 

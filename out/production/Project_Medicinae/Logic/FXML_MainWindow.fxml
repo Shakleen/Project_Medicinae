@@ -6,34 +6,57 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="pane" alignment="CENTER_RIGHT" hgap="20" stylesheets="@CSS_MainWindow.css"
-          vgap="20" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.172-ea" fx:controller="Logic.C_MainWindow">
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<BorderPane fx:id="pane" stylesheets="@CSS_MainWindow.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.172-ea" fx:controller="Logic.C_MainWindow">
 
-    <!-- Button for viewing information -->
-    <Button fx:id="FX_Button_View" minHeight="75" minWidth="250" text="View Information" GridPane.columnIndex="1" GridPane.rowIndex="2">
-        <graphic>
-            <ImageView fx:id="FX_ImageView_ViewInfo" />
-        </graphic>
-    </Button>
+    <!-- Buttons for different functionality -->
+    <right>
+        <VBox alignment="CENTER">
+            <!-- Button for viewing information -->
+            <Button fx:id="FX_Button_View" minHeight="75" minWidth="250" text="View Data">
+                <graphic>
+                    <ImageView fx:id="FX_ImageView_ViewInfo" />
+                </graphic>
 
-    <!-- Button for looking up help -->
-    <Button minHeight="75" minWidth="250" text="Help" GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <graphic>
-            <ImageView fx:id="FX_ImageView_Help" />
-        </graphic>
-    </Button>
+                <VBox.margin>
+                    <Insets top="25" bottom="25" left="25" right="25"/>
+                </VBox.margin>
+            </Button>
 
-    <!-- Button for logging in -->
-    <Button minHeight="75" minWidth="250" text="Account Info" GridPane.columnIndex="1" GridPane.rowIndex="5">
-        <graphic>
-            <ImageView fx:id="FX_ImageView_Account" />
-        </graphic>
-    </Button>
+            <!-- Button for looking up help -->
+            <Button minHeight="75" minWidth="250" text="Help">
+                <graphic>
+                    <ImageView fx:id="FX_ImageView_Help" />
+                </graphic>
 
-    <!-- Button for exiting -->
-    <Button minHeight="75" minWidth="250" text="Exit App" GridPane.columnIndex="1" GridPane.rowIndex="6">
-        <graphic>
-            <ImageView fx:id="FX_ImageView_Exit" />
-        </graphic>
-    </Button>
-</GridPane>
+                <VBox.margin>
+                    <Insets top="25" bottom="25" left="25" right="25"/>
+                </VBox.margin>
+            </Button>
+
+            <!-- Button for logging in -->
+            <Button minHeight="75" minWidth="250" text="Account Info">
+                <graphic>
+                    <ImageView fx:id="FX_ImageView_Account" />
+                </graphic>
+
+                <VBox.margin>
+                    <Insets top="25" bottom="25" left="25" right="25"/>
+                </VBox.margin>
+            </Button>
+
+            <!-- Button for exiting -->
+            <Button minHeight="75" minWidth="250" text="Exit App">
+                <graphic>
+                    <ImageView fx:id="FX_ImageView_Exit" />
+                </graphic>
+
+                <VBox.margin>
+                    <Insets top="25" bottom="25" left="25" right="25"/>
+                </VBox.margin>
+            </Button>
+        </VBox>
+    </right>
+</BorderPane>
